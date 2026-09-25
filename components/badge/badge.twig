@@ -1,0 +1,10 @@
+{#
+  Badge. Attribute values are the public variant API, so the CSS never depends on generated classes.
+  Drupal always provides `attributes`; the fallback only matters outside Drupal (Storybook).
+#}
+{% set attributes = attributes ?: create_attribute() %}
+{% set variant = variant|default('neutral') %}
+{% set size = size|default('md') %}
+<mg-badge{{ attributes.setAttribute('variant', variant).setAttribute('size', size) }}>
+  {%- block content %}{{ content }}{% endblock -%}
+</mg-badge>

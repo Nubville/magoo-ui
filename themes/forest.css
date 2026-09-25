@@ -1,0 +1,46 @@
+/**
+ * Brand: forest. Selected by data-mg-theme="forest" on <body> or on any subtree.
+ * Warm and soft: a green brand ramp, stone grays, serif headings, rounder corners.
+ *
+ * A brand file does two things, both enforced by `pnpm validate`:
+ *  - Tier 1: redeclares primitives (a ramp, a radius) with literals. Semantic tokens re-resolve on this element.
+ *  - Tier 2: remaps the few roles that should point somewhere else, with primitives only.
+ * Dark mode needs nothing extra: the semantic light-dark() pairs pick the dark steps of these ramps. The brand ramp
+ * contract is that 600 keeps 4.5:1 with white and 400 keeps 4.5:1 with gray-950 (tokens.test.js checks it per brand).
+ */
+
+/* Repeated in every file so layer order never depends on which file Drupal loads first. */
+@layer mg.tokens, mg.base, mg.components, mg.enhanced;
+
+@layer mg.tokens {
+  [data-mg-theme='forest'] {
+    /* Tier 1: this brand's values for existing primitives. */
+    --mg-color-brand-50: #ecfdf5;
+    --mg-color-brand-100: #d1fae5;
+    --mg-color-brand-200: #a7f3d0;
+    --mg-color-brand-300: #6ee7b7;
+    --mg-color-brand-400: #34d399;
+    --mg-color-brand-500: #059669;
+    --mg-color-brand-600: #047857;
+    --mg-color-brand-700: #065f46;
+    --mg-color-brand-800: #064e3b;
+    --mg-color-brand-900: #053e30;
+    --mg-color-brand-950: #022c22;
+    --mg-color-gray-50: #fafaf9;
+    --mg-color-gray-100: #f5f5f4;
+    --mg-color-gray-200: #e7e5e4;
+    --mg-color-gray-300: #d6d3d1;
+    --mg-color-gray-400: #a8a29e;
+    --mg-color-gray-500: #78716c;
+    --mg-color-gray-600: #57534e;
+    --mg-color-gray-700: #44403c;
+    --mg-color-gray-800: #292524;
+    --mg-color-gray-900: #1c1917;
+    --mg-color-gray-950: #0c0a09;
+
+    /* Tier 2: roles that point somewhere else. */
+    --mg-font-heading: var(--mg-font-serif);
+    --mg-radius-control: var(--mg-radius-lg);
+    --mg-radius-container: var(--mg-radius-xl);
+  }
+}

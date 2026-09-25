@@ -1,0 +1,55 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Dialog
+status: experimental
+description: A modal dialog built on the native <dialog> element, opened and closed with Invoker Commands (command / commandfor). Focus trapping, Escape, the top layer and inert background are all native. Optional dialog.js fills the gaps in browsers that lack Invoker Commands or closedby.
+props:
+  type: object
+  required:
+    - id
+    - title
+  properties:
+    id:
+      type: string
+      title: Dialog ID
+      description: Unique id of the <dialog>. The trigger and close buttons point at it with commandfor.
+    title:
+      type: string
+      title: Title
+      description: Rendered as the dialog heading and used as its accessible name.
+    trigger_label:
+      type: string
+      title: Trigger label
+      description: Text of the default trigger button. Ignored when the trigger slot is used.
+      default: Open
+    close_label:
+      type: string
+      title: Close button label
+      description: Accessible name of the close button.
+      default: Close
+    size:
+      type: string
+      title: Size
+      enum:
+        - sm
+        - md
+        - lg
+      default: md
+    closedby:
+      type: string
+      title: Dismissal
+      description: any closes on Escape and on a click outside, closerequest on Escape only, none only through the dialog's own buttons.
+      enum:
+        - any
+        - closerequest
+        - none
+      default: any
+slots:
+  trigger:
+    title: Trigger
+    description: Replaces the default button. It must be a <button> with command="show-modal" and commandfor set to the dialog id.
+  body:
+    title: Body
+    description: The dialog content. It scrolls when taller than the viewport.
+  footer:
+    title: Footer
+    description: Actions. Use <button command="close" commandfor="ID"> or a <form method="dialog">.

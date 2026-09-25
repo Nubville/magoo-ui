@@ -1,0 +1,67 @@
+/**
+ * @element mg-badge
+ * @attr {neutral|info|success|warning|danger} variant - Semantic color. Default: neutral.
+ * @attr {sm|md} size - Default: md.
+ * @slot - Badge text.
+ * @cssprop --mg-badge-bg - Background color.
+ * @cssprop --mg-badge-fg - Text color.
+ * @cssprop --mg-badge-border-color - Border color.
+ * @cssprop --mg-badge-radius - Corner radius.
+ */
+
+/* Repeated in every component so layer order never depends on which file Drupal loads first. */
+@layer mg.tokens, mg.base, mg.components, mg.enhanced;
+
+/*
+ * Tier 3 (component): the --mg-badge-* properties are the public API, defaulting to semantic tokens.
+ * Every var(--mg-*) carries a literal fallback, so the badge still works when no tokens are loaded.
+ * Private working values are --_*.
+ */
+@layer mg.components {
+  mg-badge {
+    --_bg: var(--mg-badge-bg, var(--mg-color-neutral-bg, #f1f5f9));
+    --_fg: var(--mg-badge-fg, var(--mg-color-neutral-fg, #1e293b));
+    --_border: var(--mg-badge-border-color, var(--mg-color-neutral-border, #cbd5e1));
+    --_font-size: var(--mg-text-small-size, 0.875rem);
+    --_pad-block: var(--mg-space-inset-xs, 0.25rem);
+    --_pad-inline: var(--mg-space-inset-sm, 0.5rem);
+
+    display: inline-block;
+    padding: var(--_pad-block) var(--_pad-inline);
+    border: var(--mg-border-width, 1px) solid var(--_border);
+    border-radius: var(--mg-badge-radius, var(--mg-radius-round, 999px));
+    background: var(--_bg);
+    color: var(--_fg);
+    font: var(--mg-text-strong-weight, 600) var(--_font-size) / 1.2 var(--mg-font-body, system-ui, sans-serif);
+    white-space: nowrap;
+  }
+
+  mg-badge[variant='info'] {
+    --_bg: var(--mg-badge-bg, var(--mg-color-info-bg, #dbeafe));
+    --_fg: var(--mg-badge-fg, var(--mg-color-info-fg, #1e3a8a));
+    --_border: var(--mg-badge-border-color, var(--mg-color-info-border, #93c5fd));
+  }
+
+  mg-badge[variant='success'] {
+    --_bg: var(--mg-badge-bg, var(--mg-color-success-bg, #dcfce7));
+    --_fg: var(--mg-badge-fg, var(--mg-color-success-fg, #14532d));
+    --_border: var(--mg-badge-border-color, var(--mg-color-success-border, #86efac));
+  }
+
+  mg-badge[variant='warning'] {
+    --_bg: var(--mg-badge-bg, var(--mg-color-warning-bg, #fef3c7));
+    --_fg: var(--mg-badge-fg, var(--mg-color-warning-fg, #78350f));
+    --_border: var(--mg-badge-border-color, var(--mg-color-warning-border, #fcd34d));
+  }
+
+  mg-badge[variant='danger'] {
+    --_bg: var(--mg-badge-bg, var(--mg-color-danger-bg, #fee2e2));
+    --_fg: var(--mg-badge-fg, var(--mg-color-danger-fg, #7f1d1d));
+    --_border: var(--mg-badge-border-color, var(--mg-color-danger-border, #fca5a5));
+  }
+
+  mg-badge[size='sm'] {
+    --_font-size: var(--mg-text-caption-size, 0.75rem);
+    --_pad-inline: var(--mg-space-inset-xs, 0.25rem);
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "ignoreFiles": ["node_modules/**", "storybook-static/**"],
+  "rules": {
+    "custom-property-pattern": "^(mg|_)[a-z0-9-]+$",
+    "selector-type-no-unknown": [true, { "ignore": ["custom-elements"] }],
+    "selector-class-pattern": null,
+    "at-rule-no-unknown": [true, { "ignoreAtRules": ["property", "layer"] }]
+  }
+}

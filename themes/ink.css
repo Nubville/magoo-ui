@@ -1,0 +1,51 @@
+/**
+ * Brand: ink. Selected by data-mg-theme="ink" on <body> or on any subtree.
+ * Hard and dense: a violet brand ramp, neutral grays, square corners, heavy borders, offset shadows, monospace
+ * headings and tighter spacing. It exists to stress the components with a brand that shares nothing with the default.
+ * See forest.css for how a brand file is put together.
+ */
+
+/* Repeated in every file so layer order never depends on which file Drupal loads first. */
+@layer mg.tokens, mg.base, mg.components, mg.enhanced;
+
+@layer mg.tokens {
+  [data-mg-theme='ink'] {
+    /* Tier 1: this brand's values for existing primitives. */
+    --mg-color-brand-50: #f5f3ff;
+    --mg-color-brand-100: #ede9fe;
+    --mg-color-brand-200: #ddd6fe;
+    --mg-color-brand-300: #c4b5fd;
+    --mg-color-brand-400: #a78bfa;
+    --mg-color-brand-500: #8b5cf6;
+    --mg-color-brand-600: #7c3aed;
+    --mg-color-brand-700: #6d28d9;
+    --mg-color-brand-800: #5b21b6;
+    --mg-color-brand-900: #4c1d95;
+    --mg-color-brand-950: #2e1065;
+    --mg-color-gray-50: #fafafa;
+    --mg-color-gray-100: #f5f5f5;
+    --mg-color-gray-200: #e5e5e5;
+    --mg-color-gray-300: #d4d4d4;
+    --mg-color-gray-400: #a3a3a3;
+    --mg-color-gray-500: #737373;
+    --mg-color-gray-600: #525252;
+    --mg-color-gray-700: #404040;
+    --mg-color-gray-800: #262626;
+    --mg-color-gray-900: #171717;
+    --mg-color-gray-950: #0a0a0a;
+    --mg-radius-sm: 0;
+    --mg-radius-md: 0;
+    --mg-radius-lg: 0;
+    --mg-radius-xl: 0;
+    --mg-shadow-1: 2px 2px 0 rgb(0 0 0 / 100%);
+    --mg-shadow-3: 6px 6px 0 rgb(0 0 0 / 100%);
+
+    /* Tier 2: roles that point somewhere else. */
+    --mg-font-heading: var(--mg-font-mono);
+    --mg-border-width: var(--mg-border-width-2);
+    --mg-space-inset-md: var(--mg-space-3);
+    --mg-space-inset-lg: var(--mg-space-4);
+    --mg-space-stack-md: var(--mg-space-3);
+    --mg-space-gap-md: var(--mg-space-3);
+  }
+}

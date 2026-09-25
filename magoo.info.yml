@@ -1,0 +1,5 @@
+name: Magoo UI
+type: module
+description: 'Discovery shim for the Magoo design system. Drupal only scans installed modules and themes for components, so this file makes the components/ directory available as magoo:<name>. It contains no PHP and no logic.'
+package: Magoo
+core_version_requirement: ^10.3 || ^11

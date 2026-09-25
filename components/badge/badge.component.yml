@@ -1,0 +1,30 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Badge
+status: experimental
+description: A short status label. Renders an undefined <mg-badge> element, styled by CSS only.
+props:
+  type: object
+  properties:
+    size:
+      type: string
+      title: Size
+      enum:
+        - sm
+        - md
+      default: md
+variants:
+  neutral:
+    title: Neutral
+    description: Default. No particular status.
+  info:
+    title: Info
+  success:
+    title: Success
+  warning:
+    title: Warning
+  danger:
+    title: Danger
+slots:
+  content:
+    title: Content
+    description: The badge text. Keep it short.

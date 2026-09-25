@@ -1,0 +1,176 @@
+/**
+ * @element mg-dialog
+ * @attr {sm|md|lg} size - Width. Default: md.
+ * @slot trigger - Replaces the default open button.
+ * @slot body - Dialog content. Scrolls when tall.
+ * @slot footer - Actions.
+ * @cssprop --mg-dialog-width - Width (capped to the viewport).
+ * @cssprop --mg-dialog-bg - Background color.
+ * @cssprop --mg-dialog-radius - Corner radius.
+ * @cssprop --mg-dialog-backdrop - Backdrop color.
+ */
+
+/* Repeated in every component so layer order never depends on which file Drupal loads first. */
+@layer mg.tokens, mg.base, mg.components, mg.enhanced;
+
+/*
+ * Tier 3 (component): --mg-dialog-* is the public API, defaulting to semantic tokens (see badge.css).
+ * Structure: <mg-dialog> > trigger + <dialog> > [slot=header|body|footer].
+ */
+@layer mg.components {
+  mg-dialog {
+    --_width: var(--mg-dialog-width, 32rem);
+    --_pad: var(--mg-space-inset-md, 1rem);
+
+    display: inline-block;
+  }
+
+  mg-dialog[size='sm'] {
+    --_width: var(--mg-dialog-width, 22rem);
+  }
+
+  mg-dialog[size='lg'] {
+    --_width: var(--mg-dialog-width, 48rem);
+  }
+
+  mg-dialog > dialog {
+    box-sizing: border-box;
+    inline-size: var(--_width);
+    max-inline-size: calc(100vw - 2rem);
+    max-block-size: calc(100vh - 2rem);
+    max-block-size: calc(100dvh - 2rem);
+    padding: 0;
+    border: var(--mg-border-width, 1px) solid var(--mg-color-border, #cbd5e1);
+    border-radius: var(--mg-dialog-radius, var(--mg-radius-container, 0.5rem));
+    background: var(--mg-dialog-bg, var(--mg-color-surface, #fff));
+    color: var(--mg-color-text, #0f172a);
+    box-shadow: var(--mg-shadow-overlay, 0 8px 24px rgb(0 0 0 / 30%));
+    font: var(--mg-text-body-weight, 400) var(--mg-text-body-size, 1rem) / var(--mg-text-body-leading, 1.5)
+      var(--mg-font-body, system-ui, sans-serif);
+    overscroll-behavior: contain;
+  }
+
+  /*
+   * Only when open. Setting display on the closed dialog would override the UA's
+   * `dialog:not([open]) { display: none }` and show it inline on the page.
+   */
+  mg-dialog > dialog[open] {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  mg-dialog > dialog::backdrop {
+    background: var(--mg-dialog-backdrop, var(--mg-color-backdrop, rgb(0 0 0 / 50%)));
+  }
+
+  mg-dialog > dialog > [slot]:empty {
+    display: none;
+  }
+
+  mg-dialog > dialog > [slot='header'] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mg-space-gap-sm, 0.5rem);
+    padding: var(--_pad) var(--_pad) var(--mg-space-inset-sm, 0.5rem);
+  }
+
+  /* Beats the bare-element heading margin from mg.base by layer order, not by specificity. */
+  mg-dialog > dialog > [slot='header'] > h2 {
+    margin: 0;
+    font-size: var(--mg-text-h5-size, 1.125rem);
+    font-weight: var(--mg-text-heading-weight, 600);
+    line-height: var(--mg-text-heading-leading, 1.2);
+  }
+
+  mg-dialog > dialog > [slot='header'] > button {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    min-inline-size: 2rem;
+    min-block-size: 2rem;
+    padding: 0;
+    border: 0;
+    border-radius: var(--mg-radius-control, 0.375rem);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  mg-dialog > dialog > [slot='header'] > button:hover {
+    background: var(--mg-color-surface-muted, #f8fafc);
+  }
+
+  mg-dialog > dialog > [slot='body'] {
+    min-block-size: 0;
+    padding: var(--mg-space-inset-sm, 0.5rem) var(--_pad);
+    overflow: auto;
+  }
+
+  mg-dialog > dialog > [slot='footer'] {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--mg-space-gap-sm, 0.5rem);
+    padding: var(--mg-space-inset-sm, 0.5rem) var(--_pad) var(--_pad);
+  }
+}
+
+@layer mg.enhanced {
+  /* Animate open and close, including the top layer and display, where the browser can. */
+  @supports (transition-behavior: allow-discrete) {
+    mg-dialog > dialog {
+      transform: translateY(1rem);
+      opacity: 0;
+      transition:
+        opacity var(--mg-motion-duration, 200ms) var(--mg-motion-easing, ease),
+        transform var(--mg-motion-duration, 200ms) var(--mg-motion-easing, ease),
+        overlay var(--mg-motion-duration, 200ms) allow-discrete,
+        display var(--mg-motion-duration, 200ms) allow-discrete;
+    }
+
+    mg-dialog > dialog[open] {
+      transform: none;
+      opacity: 1;
+    }
+
+    @starting-style {
+      mg-dialog > dialog[open] {
+        transform: translateY(1rem);
+        opacity: 0;
+      }
+    }
+
+    mg-dialog > dialog::backdrop {
+      opacity: 0;
+      transition:
+        opacity var(--mg-motion-duration, 200ms) var(--mg-motion-easing, ease),
+        overlay var(--mg-motion-duration, 200ms) allow-discrete,
+        display var(--mg-motion-duration, 200ms) allow-discrete;
+    }
+
+    mg-dialog > dialog[open]::backdrop {
+      opacity: 1;
+    }
+
+    @starting-style {
+      mg-dialog > dialog[open]::backdrop {
+        opacity: 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      mg-dialog > dialog,
+      mg-dialog > dialog::backdrop {
+        transition: none;
+      }
+    }
+  }
+
+  /* Native modals leave the page scrollable behind them. */
+  @supports selector(:has(*)) {
+    body:has(mg-dialog > dialog:modal) {
+      overflow: hidden;
+    }
+  }
+}

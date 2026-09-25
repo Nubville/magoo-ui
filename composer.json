@@ -1,0 +1,9 @@
+{
+  "name": "nubville/magoo-ui",
+  "description": "A design system of Drupal single directory components. Ships as authored, with no build step.",
+  "type": "drupal-module",
+  "license": "MIT",
+  "require": {
+    "drupal/core": "^10.3 || ^11"
+  }
+}

@@ -1,0 +1,7 @@
+*.log
+.DS_Store
+.vitest-attachments/
+__screenshots__/
+coverage/
+node_modules/
+storybook-static/

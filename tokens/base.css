@@ -1,0 +1,282 @@
+/**
+ * Base styles: the bare HTML elements, styled from semantic tokens only (never primitives).
+ *
+ * Everything is in @layer mg.base, so any unlayered CSS (a Drupal theme, Olivero, a consumer) overrides it.
+ * That makes it safe to add beside an existing theme. Opt in with the `magoo/base` library.
+ * Selectors are wrapped in :where() to stay at zero specificity.
+ */
+
+/* Repeated in every file so layer order never depends on which file Drupal loads first. */
+@layer mg.tokens, mg.base, mg.components, mg.enhanced;
+
+@layer mg.base {
+  :where(*, *::before, *::after) {
+    box-sizing: border-box;
+  }
+
+  :where([hidden]:not([hidden='until-found'])) {
+    display: none !important;
+  }
+
+  /*
+   * Base takes over the page, including following the user's light/dark preference through light-dark() tokens.
+   * (semantic.css does not set this, so tokens-only consumers keep their theme's scheme.)
+   */
+  :where(:root) {
+    color-scheme: light dark;
+  }
+
+  :where(html) {
+    /* stylelint-disable-next-line declaration-block-no-duplicate-properties -- prefixed form is still needed by Safari */
+    text-size-adjust: 100%;
+    /* stylelint-disable-next-line declaration-block-no-duplicate-properties -- prefixed form is still needed by Safari */
+    text-size-adjust: 100%;
+  }
+
+  :where(body) {
+    margin: 0;
+    background: var(--mg-color-canvas);
+    color: var(--mg-color-text);
+    font-family: var(--mg-font-body);
+    font-size: var(--mg-text-body-size);
+    font-weight: var(--mg-text-body-weight);
+    line-height: var(--mg-text-body-leading);
+  }
+
+  /* Focus: one visible ring everywhere, never removed. */
+  :where(:focus-visible) {
+    outline: var(--mg-focus-ring-width) solid var(--mg-color-focus-ring);
+    outline-offset: var(--mg-focus-ring-offset);
+  }
+
+  /* Text blocks. */
+  :where(h1, h2, h3, h4, h5, h6) {
+    margin-block: 0 var(--mg-space-stack-sm);
+    font-family: var(--mg-font-heading);
+    font-weight: var(--mg-text-heading-weight);
+    line-height: var(--mg-text-heading-leading);
+    text-wrap: balance;
+  }
+
+  :where(h1) {
+    font-size: var(--mg-text-h1-size);
+  }
+
+  :where(h2) {
+    font-size: var(--mg-text-h2-size);
+  }
+
+  :where(h3) {
+    font-size: var(--mg-text-h3-size);
+  }
+
+  :where(h4) {
+    font-size: var(--mg-text-h4-size);
+  }
+
+  :where(h5) {
+    font-size: var(--mg-text-h5-size);
+  }
+
+  :where(h6) {
+    font-size: var(--mg-text-h6-size);
+  }
+
+  :where(p, ul, ol, dl, blockquote, pre, figure, table, details, fieldset, hr) {
+    margin-block: 0 var(--mg-space-stack-md);
+  }
+
+  :where(ul, ol) {
+    padding-inline-start: var(--mg-space-inset-lg);
+  }
+
+  :where(li > ul, li > ol) {
+    margin-block-end: 0;
+  }
+
+  :where(dt) {
+    font-weight: var(--mg-text-strong-weight);
+  }
+
+  :where(dd) {
+    margin-inline-start: var(--mg-space-inset-md);
+  }
+
+  :where(blockquote) {
+    padding-inline-start: var(--mg-space-inset-md);
+    border-inline-start: var(--mg-border-width-emphasis) solid var(--mg-color-border-strong);
+    color: var(--mg-color-text-muted);
+  }
+
+  :where(hr) {
+    border: 0;
+    border-block-start: var(--mg-border-width) solid var(--mg-color-border);
+  }
+
+  /* Inline text. */
+  :where(a) {
+    color: var(--mg-color-link);
+    text-underline-offset: 0.2em;
+  }
+
+  :where(a:hover) {
+    color: var(--mg-color-link-hover);
+  }
+
+  :where(strong, b, th) {
+    font-weight: var(--mg-text-strong-weight);
+  }
+
+  :where(small) {
+    font-size: var(--mg-text-small-size);
+  }
+
+  :where(mark) {
+    padding-inline: var(--mg-space-inset-xs);
+    border-radius: var(--mg-radius-control);
+    background: var(--mg-color-warning-bg);
+    color: var(--mg-color-warning-fg);
+  }
+
+  :where(code, kbd, samp, pre) {
+    font-family: var(--mg-font-code);
+    font-size: 0.9em;
+  }
+
+  :where(code, kbd, samp) {
+    padding: 0.1em var(--mg-space-inset-xs);
+    border-radius: var(--mg-radius-control);
+    background: var(--mg-color-surface-muted);
+  }
+
+  :where(kbd) {
+    border: var(--mg-border-width) solid var(--mg-color-border-strong);
+  }
+
+  :where(pre) {
+    overflow: auto;
+    padding: var(--mg-space-inset-md);
+    border-radius: var(--mg-radius-container);
+    background: var(--mg-color-surface-muted);
+  }
+
+  :where(pre code) {
+    padding: 0;
+    background: none;
+    font-size: inherit;
+  }
+
+  /* Embedded content. */
+  :where(img, svg, video, canvas) {
+    max-inline-size: 100%;
+  }
+
+  :where(img, video) {
+    block-size: auto;
+  }
+
+  :where(figcaption) {
+    margin-block-start: var(--mg-space-inset-xs);
+    color: var(--mg-color-text-muted);
+    font-size: var(--mg-text-small-size);
+  }
+
+  /* Tables. */
+  :where(table) {
+    border-collapse: collapse;
+    inline-size: 100%;
+  }
+
+  :where(th, td) {
+    padding: var(--mg-space-inset-sm);
+    border-block-end: var(--mg-border-width) solid var(--mg-color-border);
+    text-align: start;
+  }
+
+  :where(caption) {
+    padding-block: var(--mg-space-inset-sm);
+    color: var(--mg-color-text-muted);
+    font-size: var(--mg-text-small-size);
+    text-align: start;
+  }
+
+  :where(thead th) {
+    border-block-end-color: var(--mg-color-border-strong);
+  }
+
+  /* Disclosure. */
+  :where(summary) {
+    cursor: pointer;
+    font-weight: var(--mg-text-strong-weight);
+  }
+
+  /* Forms. Controls need a 3:1 border against the page (WCAG 1.4.11), hence border-strong. */
+  :where(label) {
+    font-weight: var(--mg-text-strong-weight);
+  }
+
+  :where(fieldset) {
+    padding: var(--mg-space-inset-md);
+    border: var(--mg-border-width) solid var(--mg-color-border);
+    border-radius: var(--mg-radius-container);
+  }
+
+  :where(legend) {
+    padding-inline: var(--mg-space-inset-xs);
+    font-weight: var(--mg-text-strong-weight);
+  }
+
+  :where(input, select, textarea, button) {
+    font: inherit;
+    color: inherit;
+  }
+
+  :where(
+    input:not([type='checkbox'], [type='radio'], [type='range'], [type='color'], [type='file'], [type='image']),
+    select,
+    textarea
+  ) {
+    min-block-size: var(--mg-size-control);
+    padding: var(--mg-space-inset-xs) var(--mg-space-inset-sm);
+    border: var(--mg-border-width) solid var(--mg-color-border-strong);
+    border-radius: var(--mg-radius-control);
+    background: var(--mg-color-surface);
+  }
+
+  :where(textarea) {
+    min-block-size: calc(var(--mg-size-control) * 2);
+    resize: vertical;
+  }
+
+  :where(::placeholder) {
+    color: var(--mg-color-text-muted);
+    opacity: 1;
+  }
+
+  :where(input, select, textarea)[aria-invalid='true'] {
+    border-color: var(--mg-color-danger-fg);
+  }
+
+  :where(input[type='checkbox'], input[type='radio'], input[type='range'], progress, meter) {
+    accent-color: var(--mg-color-accent);
+  }
+
+  :where(button, input:is([type='button'], [type='submit'], [type='reset']), ::file-selector-button) {
+    min-block-size: var(--mg-size-control);
+    padding: var(--mg-space-inset-xs) var(--mg-space-inset-md);
+    border: var(--mg-border-width) solid var(--mg-color-border-strong);
+    border-radius: var(--mg-radius-control);
+    background: var(--mg-color-surface);
+    font-weight: var(--mg-text-strong-weight);
+    cursor: pointer;
+  }
+
+  :where(button, input:is([type='button'], [type='submit'], [type='reset'])):hover {
+    background: var(--mg-color-surface-muted);
+  }
+
+  :where(:disabled, [aria-disabled='true']) {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

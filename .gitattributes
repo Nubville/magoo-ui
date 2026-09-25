@@ -1,0 +1,20 @@
+# Keep dev tooling out of `composer install --prefer-dist`. Drupal only needs the shipped files.
+/.storybook export-ignore
+/docs export-ignore
+/scripts export-ignore
+/schemas export-ignore
+/eslint.config.js export-ignore
+/vite.config.js export-ignore
+/vitest.config.js export-ignore
+/pnpm-lock.yaml export-ignore
+/pnpm-workspace.yaml export-ignore
+/.stylelintrc.json export-ignore
+/.prettierrc export-ignore
+/.prettierignore export-ignore
+/.editorconfig export-ignore
+/CLAUDE.md export-ignore
+*.stories.js export-ignore
+*.test.js export-ignore
+/tests export-ignore
+/.vitest-attachments export-ignore
+__screenshots__ export-ignore

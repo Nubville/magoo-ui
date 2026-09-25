@@ -1,0 +1,35 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Card
+status: experimental
+description: A container with optional media, header, body and footer regions, laid out on a CSS grid. Renders an undefined <mg-card> element, styled by CSS only. It has no semantic role of its own, so put headings and links inside it.
+props:
+  type: object
+  properties:
+    compact:
+      type: boolean
+      title: Compact
+      description: Use tighter padding.
+      default: false
+variants:
+  outlined:
+    title: Outlined
+    description: Default. A border on the surface color.
+  elevated:
+    title: Elevated
+    description: A shadow instead of a border.
+  flat:
+    title: Flat
+    description: No border or shadow.
+slots:
+  media:
+    title: Media
+    description: Full-bleed image or video at the top edge of the card.
+  header:
+    title: Header
+    description: Usually a heading.
+  body:
+    title: Body
+    description: The main content. Takes the spare height when cards in a row are stretched.
+  footer:
+    title: Footer
+    description: Actions or metadata, kept at the bottom edge.

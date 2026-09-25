@@ -1,0 +1,24 @@
+{#
+  Dialog. Everything interactive is native: the <dialog>, and buttons using Invoker Commands
+  (command / commandfor), so it opens and closes with no JS in current browsers.
+  Slot wrappers are left truly empty when unused, so CSS can hide them with :empty.
+  Note `title` is the visible heading and the dialog's accessible name (aria-labelledby).
+#}
+{% set attributes = attributes ?: create_attribute() %}
+<mg-dialog{{ attributes.setAttribute('size', size|default('md')) }}>
+  {%- block trigger %}
+    {%- if trigger %}{{ trigger }}{% else -%}
+      <button type="button" command="show-modal" commandfor="{{ id }}">{{ trigger_label|default('Open') }}</button>
+    {%- endif %}
+  {% endblock -%}
+  <dialog id="{{ id }}" closedby="{{ closedby|default('any') }}" aria-labelledby="{{ id }}-title">
+    <div slot="header">
+      <h2 id="{{ id }}-title">{{ title }}</h2>
+      <button type="button" command="close" commandfor="{{ id }}" aria-label="{{ close_label|default('Close') }}">
+        <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div slot="body">{%- block body %}{{ body }}{% endblock -%}</div>
+    <div slot="footer">{%- block footer %}{{ footer }}{% endblock -%}</div>
+  </dialog>
+</mg-dialog>

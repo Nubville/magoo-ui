@@ -1,0 +1,165 @@
+/**
+ * Tier 2: semantic tokens. Named by role (text, surface, accent, inset-md), never by value.
+ * This is the layer a brand changes: retheme by editing what these point at, or override them from unlayered CSS.
+ * A brand (themes/<name>.css, selected by data-mg-theme="<name>") does it in a file of its own.
+ *
+ * Rules (enforced by `pnpm validate`):
+ *  - Values only reference primitives (primitives.css). No literals.
+ *  - Components and base styles reference these, never primitives.
+ *
+ * Colors have a light-only baseline, then light-dark() where supported. light-dark() follows the `color-scheme` in
+ * effect, and this file deliberately does NOT set it: a theme that only supports light must not get dark components.
+ * `magoo/base` sets `color-scheme: light dark` on :root, or set it yourself on :root or on any subtree
+ * (`data-mg-mode="light|dark|auto"` on any element does exactly that).
+ * Both color blocks are generated from one table, keep them in step.
+ */
+
+/* Repeated in every file so layer order never depends on which file Drupal loads first. */
+@layer mg.tokens, mg.base, mg.components, mg.enhanced;
+
+@layer mg.tokens {
+  /*
+   * Also declared on every [data-mg-theme] element, so var() re-resolves against that theme's primitives (a custom
+   * property is substituted where it is declared, so :root alone would keep the default ramps). :where() keeps it at
+   * zero specificity, so the theme's own semantic overrides win whatever order Drupal loads the files in.
+   */
+  :where(:root, [data-mg-theme]) {
+    /* Color: baseline (light). */
+    --mg-color-canvas: var(--mg-color-white);
+    --mg-color-surface: var(--mg-color-white);
+    --mg-color-surface-muted: var(--mg-color-gray-50);
+    --mg-color-text: var(--mg-color-gray-900);
+    --mg-color-text-muted: var(--mg-color-gray-600);
+    --mg-color-text-inverse: var(--mg-color-white);
+    --mg-color-border: var(--mg-color-gray-300);
+    --mg-color-border-strong: var(--mg-color-gray-500);
+    --mg-color-link: var(--mg-color-brand-700);
+    --mg-color-link-hover: var(--mg-color-brand-900);
+    --mg-color-accent: var(--mg-color-brand-600);
+    --mg-color-accent-hover: var(--mg-color-brand-700);
+    --mg-color-accent-fg: var(--mg-color-white);
+    --mg-color-focus-ring: var(--mg-color-brand-600);
+    --mg-color-backdrop: var(--mg-color-black-a50);
+    --mg-color-neutral-bg: var(--mg-color-gray-100);
+    --mg-color-neutral-fg: var(--mg-color-gray-800);
+    --mg-color-neutral-border: var(--mg-color-gray-300);
+    --mg-color-info-bg: var(--mg-color-blue-100);
+    --mg-color-info-fg: var(--mg-color-blue-900);
+    --mg-color-info-border: var(--mg-color-blue-300);
+    --mg-color-success-bg: var(--mg-color-green-100);
+    --mg-color-success-fg: var(--mg-color-green-900);
+    --mg-color-success-border: var(--mg-color-green-300);
+    --mg-color-warning-bg: var(--mg-color-amber-100);
+    --mg-color-warning-fg: var(--mg-color-amber-900);
+    --mg-color-warning-border: var(--mg-color-amber-300);
+    --mg-color-danger-bg: var(--mg-color-red-100);
+    --mg-color-danger-fg: var(--mg-color-red-900);
+    --mg-color-danger-border: var(--mg-color-red-300);
+
+    /* Typography roles. */
+    --mg-font-body: var(--mg-font-sans);
+    --mg-font-heading: var(--mg-font-sans);
+    --mg-font-code: var(--mg-font-mono);
+    --mg-text-caption-size: var(--mg-font-size-xs);
+    --mg-text-small-size: var(--mg-font-size-sm);
+    --mg-text-body-size: var(--mg-font-size-md);
+    --mg-text-lead-size: var(--mg-font-size-xl);
+    --mg-text-h1-size: var(--mg-font-size-4xl);
+    --mg-text-h2-size: var(--mg-font-size-3xl);
+    --mg-text-h3-size: var(--mg-font-size-2xl);
+    --mg-text-h4-size: var(--mg-font-size-xl);
+    --mg-text-h5-size: var(--mg-font-size-lg);
+    --mg-text-h6-size: var(--mg-font-size-md);
+    --mg-text-body-leading: var(--mg-line-height-normal);
+    --mg-text-heading-leading: var(--mg-line-height-tight);
+    --mg-text-body-weight: var(--mg-font-weight-regular);
+    --mg-text-strong-weight: var(--mg-font-weight-semibold);
+    --mg-text-heading-weight: var(--mg-font-weight-semibold);
+
+    /* Spacing roles: inset is padding, stack is vertical rhythm between blocks, gap is flex/grid gaps. */
+    --mg-space-inset-xs: var(--mg-space-1);
+    --mg-space-inset-sm: var(--mg-space-2);
+    --mg-space-inset-md: var(--mg-space-4);
+    --mg-space-inset-lg: var(--mg-space-6);
+    --mg-space-stack-sm: var(--mg-space-2);
+    --mg-space-stack-md: var(--mg-space-4);
+    --mg-space-stack-lg: var(--mg-space-8);
+    --mg-space-gap-sm: var(--mg-space-2);
+    --mg-space-gap-md: var(--mg-space-4);
+    --mg-space-gap-lg: var(--mg-space-6);
+    --mg-size-control: var(--mg-space-10);
+
+    /* Shape roles. */
+    --mg-radius-control: var(--mg-radius-md);
+    --mg-radius-container: var(--mg-radius-lg);
+    --mg-radius-round: var(--mg-radius-pill);
+    --mg-border-width: var(--mg-border-width-1);
+    --mg-border-width-emphasis: var(--mg-border-width-4);
+    --mg-focus-ring-width: var(--mg-border-width-2);
+    --mg-focus-ring-offset: var(--mg-border-width-2);
+    --mg-shadow-raised: var(--mg-shadow-1);
+    --mg-shadow-overlay: var(--mg-shadow-3);
+
+    /* Motion roles. */
+    --mg-motion-duration: var(--mg-duration-base);
+    --mg-motion-easing: var(--mg-easing-standard);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(:root, [data-mg-theme]) {
+      --mg-motion-duration: 0.01ms;
+    }
+  }
+
+  /* Color: enhanced. Resolves per the color-scheme in effect (see above). */
+  @supports (color: light-dark(red, blue)) {
+    :where(:root, [data-mg-theme]) {
+      --mg-color-canvas: light-dark(var(--mg-color-white), var(--mg-color-gray-950));
+      --mg-color-surface: light-dark(var(--mg-color-white), var(--mg-color-gray-900));
+      --mg-color-surface-muted: light-dark(var(--mg-color-gray-50), var(--mg-color-gray-800));
+      --mg-color-text: light-dark(var(--mg-color-gray-900), var(--mg-color-gray-50));
+      --mg-color-text-muted: light-dark(var(--mg-color-gray-600), var(--mg-color-gray-400));
+      --mg-color-text-inverse: light-dark(var(--mg-color-white), var(--mg-color-gray-950));
+      --mg-color-border: light-dark(var(--mg-color-gray-300), var(--mg-color-gray-700));
+      --mg-color-border-strong: light-dark(var(--mg-color-gray-500), var(--mg-color-gray-500));
+      --mg-color-link: light-dark(var(--mg-color-brand-700), var(--mg-color-brand-300));
+      --mg-color-link-hover: light-dark(var(--mg-color-brand-900), var(--mg-color-brand-200));
+      --mg-color-accent: light-dark(var(--mg-color-brand-600), var(--mg-color-brand-400));
+      --mg-color-accent-hover: light-dark(var(--mg-color-brand-700), var(--mg-color-brand-300));
+      --mg-color-accent-fg: light-dark(var(--mg-color-white), var(--mg-color-gray-950));
+      --mg-color-focus-ring: light-dark(var(--mg-color-brand-600), var(--mg-color-brand-300));
+      --mg-color-backdrop: light-dark(var(--mg-color-black-a50), var(--mg-color-black-a70));
+      --mg-color-neutral-bg: light-dark(var(--mg-color-gray-100), var(--mg-color-gray-800));
+      --mg-color-neutral-fg: light-dark(var(--mg-color-gray-800), var(--mg-color-gray-100));
+      --mg-color-neutral-border: light-dark(var(--mg-color-gray-300), var(--mg-color-gray-600));
+      --mg-color-info-bg: light-dark(var(--mg-color-blue-100), var(--mg-color-blue-950));
+      --mg-color-info-fg: light-dark(var(--mg-color-blue-900), var(--mg-color-blue-200));
+      --mg-color-info-border: light-dark(var(--mg-color-blue-300), var(--mg-color-blue-800));
+      --mg-color-success-bg: light-dark(var(--mg-color-green-100), var(--mg-color-green-950));
+      --mg-color-success-fg: light-dark(var(--mg-color-green-900), var(--mg-color-green-200));
+      --mg-color-success-border: light-dark(var(--mg-color-green-300), var(--mg-color-green-800));
+      --mg-color-warning-bg: light-dark(var(--mg-color-amber-100), var(--mg-color-amber-950));
+      --mg-color-warning-fg: light-dark(var(--mg-color-amber-900), var(--mg-color-amber-200));
+      --mg-color-warning-border: light-dark(var(--mg-color-amber-300), var(--mg-color-amber-800));
+      --mg-color-danger-bg: light-dark(var(--mg-color-red-100), var(--mg-color-red-950));
+      --mg-color-danger-fg: light-dark(var(--mg-color-red-900), var(--mg-color-red-200));
+      --mg-color-danger-border: light-dark(var(--mg-color-red-300), var(--mg-color-red-800));
+    }
+  }
+
+  /*
+   * Mode: an explicit opt-in per subtree (a Drupal theme setting, a switcher, a Storybook toolbar). Without the
+   * attribute nothing here applies and `color-scheme` stays whatever the page or magoo/base set.
+   */
+  [data-mg-mode='light'] {
+    color-scheme: light;
+  }
+
+  [data-mg-mode='dark'] {
+    color-scheme: dark;
+  }
+
+  [data-mg-mode='auto'] {
+    color-scheme: light dark;
+  }
+}

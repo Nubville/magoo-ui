@@ -1,0 +1,31 @@
+# Design tokens (primitive + semantic). Add `magoo/tokens` to your theme's `libraries:` so every page gets them.
+# Component CSS is attached automatically by SDC when a component renders.
+tokens:
+  css:
+    base:
+      tokens/primitives.css: {}
+      tokens/semantic.css: {}
+
+# Optional: styles for bare HTML elements. In @layer mg.base, so any unlayered theme CSS overrides it.
+base:
+  dependencies:
+    - magoo/tokens
+  css:
+    base:
+      tokens/base.css: {}
+
+# Brands. One file per brand, selected by data-mg-theme="<name>" on <body> or any subtree. Load only the brand a site
+# uses, or several to switch between them. The default brand is the tokens themselves and needs no library.
+theme-forest:
+  dependencies:
+    - magoo/tokens
+  css:
+    theme:
+      themes/forest.css: {}
+
+theme-ink:
+  dependencies:
+    - magoo/tokens
+  css:
+    theme:
+      themes/ink.css: {}

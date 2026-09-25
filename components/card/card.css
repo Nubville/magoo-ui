@@ -1,0 +1,90 @@
+/**
+ * @element mg-card
+ * @attr {outlined|elevated|flat} variant - Surface treatment. Default: outlined.
+ * @attr {boolean} compact - Tighter padding.
+ * @slot media - Full-bleed image or video at the top.
+ * @slot header - Usually a heading.
+ * @slot body - Main content.
+ * @slot footer - Actions or metadata.
+ * @cssprop --mg-card-bg - Background color.
+ * @cssprop --mg-card-border-color - Border color.
+ * @cssprop --mg-card-radius - Corner radius.
+ * @cssprop --mg-card-padding - Padding of each region.
+ */
+
+/* Repeated in every component so layer order never depends on which file Drupal loads first. */
+@layer mg.tokens, mg.base, mg.components, mg.enhanced;
+
+@layer mg.components {
+  /*
+   * Slot selectors always use the child combinator (mg-card > [slot]) so a card nested in another
+   * card's body never picks up the outer card's slot styles.
+   * DOM order is visual order: no `order`, the grid areas just name the rows.
+   */
+  mg-card {
+    --_pad: var(--mg-card-padding, var(--mg-space-inset-md, 1rem));
+    --_radius: var(--mg-card-radius, var(--mg-radius-container, 0.5rem));
+
+    display: grid;
+    grid-template: 'media' auto 'header' auto 'body' 1fr 'footer' auto / minmax(0, 1fr);
+    border: var(--mg-border-width, 1px) solid var(--mg-card-border-color, var(--mg-color-border, #cbd5e1));
+    border-radius: var(--_radius);
+    background: var(--mg-card-bg, var(--mg-color-surface, #fff));
+    color: var(--mg-color-text, #0f172a);
+    font: var(--mg-text-body-weight, 400) var(--mg-text-body-size, 1rem) / var(--mg-text-body-leading, 1.5)
+      var(--mg-font-body, system-ui, sans-serif);
+  }
+
+  mg-card[compact] {
+    --_pad: var(--mg-card-padding, var(--mg-space-inset-sm, 0.5rem));
+  }
+
+  mg-card[variant='elevated'] {
+    border-color: transparent;
+    box-shadow: var(--mg-shadow-raised, 0 1px 2px rgb(0 0 0 / 20%));
+  }
+
+  mg-card[variant='flat'] {
+    border-color: transparent;
+  }
+
+  /* Unused slots are truly empty (see card.twig), so they take no space. */
+  mg-card > [slot]:empty {
+    display: none;
+  }
+
+  mg-card > [slot='media'] {
+    grid-area: media;
+    overflow: hidden;
+    border-radius: calc(var(--_radius) - 1px) calc(var(--_radius) - 1px) 0 0;
+  }
+
+  mg-card > [slot='media'] :is(img, video) {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+  }
+
+  mg-card > [slot='header'] {
+    grid-area: header;
+    padding: var(--_pad);
+    font-size: var(--mg-text-h5-size, 1.125rem);
+    font-weight: var(--mg-text-heading-weight, 600);
+  }
+
+  mg-card > [slot='body'] {
+    grid-area: body;
+    padding: var(--_pad);
+  }
+
+  mg-card > [slot='footer'] {
+    grid-area: footer;
+    padding: var(--_pad);
+  }
+
+  /* Regions stack with one padding between them: drop the top padding when text content sits above. */
+  mg-card > [slot='header']:not(:empty) ~ :is([slot='body'], [slot='footer']),
+  mg-card > [slot='body']:not(:empty) ~ [slot='footer'] {
+    padding-block-start: 0;
+  }
+}

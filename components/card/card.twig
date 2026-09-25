@@ -1,0 +1,19 @@
+{#
+  Card. Every slot wrapper is always emitted and left truly empty when unused (note the whitespace control),
+  so CSS can hide it with :empty. Attribute values are the public variant API.
+#}
+{% set attributes = attributes ?: create_attribute() %}
+{% set attributes = attributes.setAttribute('variant', variant|default('outlined')) %}
+{#
+  Boolean attribute: `true`, not '' (drupal-attribute skips empty strings; Drupal prints a bare `compact`).
+  Keep it an {% if %}: Twig.js evaluates both branches of a ternary, so a mutating call there always runs.
+#}
+{% if compact %}
+  {% set attributes = attributes.setAttribute('compact', true) %}
+{% endif %}
+<mg-card{{ attributes }}>
+  <div slot="media">{%- block media %}{{ media }}{% endblock -%}</div>
+  <div slot="header">{%- block header %}{{ header }}{% endblock -%}</div>
+  <div slot="body">{%- block body %}{{ body }}{% endblock -%}</div>
+  <div slot="footer">{%- block footer %}{{ footer }}{% endblock -%}</div>
+</mg-card>
