@@ -11,10 +11,14 @@ props:
     id:
       type: string
       title: Dialog ID
+      examples:
+        - edit-profile
       description: Unique id of the <dialog>. The trigger and close buttons point at it with commandfor.
     title:
       type: string
       title: Title
+      examples:
+        - Edit profile
       description: Rendered as the dialog heading and used as its accessible name.
     trigger_label:
       type: string
