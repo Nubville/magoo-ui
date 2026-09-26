@@ -12,8 +12,10 @@ import { load } from 'js-yaml';
  * @param {string} options.yml Raw contents of the component.yml (import with ?raw).
  * @param {Function} options.template The compiled Twig template.
  * @param {object} [options.args] Story args for the slots, e.g. { content: 'Draft' }.
+ * @param {'centered'|'padded'|'fullscreen'} [options.layout] Canvas layout. Pass it here, not as a sibling `parameters` key in the
+ *   story file: the `parameters` returned below would overwrite it (that is how the grid stories ended up shrink-wrapped).
  */
-export function sdcMeta({ id, yml, template, args = {} }) {
+export function sdcMeta({ id, yml, template, args = {}, layout }) {
   const component = load(yml);
   const argTypes = {};
   const defaults = {};
@@ -50,6 +52,7 @@ export function sdcMeta({ id, yml, template, args = {} }) {
     argTypes,
     args: { ...defaults, ...args },
     parameters: {
+      ...(layout && { layout }),
       magoo: { component: id },
       docs: { description: { component: `${component.description}\n\nDrupal: \`{% include 'magoo:${id}' %}\`` } },
     },

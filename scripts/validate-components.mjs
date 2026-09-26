@@ -7,6 +7,9 @@
  *  3. Every prop the Twig reads is declared, and every declared prop is used.
  *  4. Component CSS starts by declaring the layer order (aggregation can reorder files).
  *  5. Shipped files (css, twig, js, yml) don't reference build output.
+ *  6. Events a component's JS dispatches are named mg-<component>-<event> (kebab-case), as a string literal so this can be checked.
+ *  7. A story file has no `parameters` key beside `...sdcMeta()` in its default export: the spread's own `parameters`
+ *     overwrites it, which silently shrink-wrapped the layout stories. Pass `layout` to sdcMeta() instead.
  */
 import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
 import { join } from 'node:path';
@@ -132,9 +135,32 @@ for (const name of dirs) {
       `${name}.css must declare "@layer mg.tokens, mg.base, mg.components, mg.enhanced;" before its own layers`,
     );
 
+  const stories = join(dir, `${name}.stories.js`);
+  if (existsSync(stories)) {
+    const source = readFileSync(stories, 'utf8');
+    const meta = source.slice(source.indexOf('export default {'), source.search(/\nexport const /));
+    if (/^ {2}parameters\s*:/m.test(meta))
+      fail(
+        name,
+        `${name}.stories.js sets \`parameters\` beside ...sdcMeta(), which overwrites it. Pass e.g. layout: 'fullscreen' to sdcMeta().`,
+      );
+  }
+
   for (const file of readdirSync(dir)) {
     if (/\.(css|twig|js|yml)$/.test(file) && !/\.(stories|test)\.js$/.test(file)) {
-      if (/\b(dist|build)\//.test(readFileSync(join(dir, file), 'utf8'))) fail(name, `${file} references build output`);
+      const source = readFileSync(join(dir, file), 'utf8');
+      if (/\b(dist|build)\//.test(source)) fail(name, `${file} references build output`);
+      if (file.endsWith('.js')) {
+        const eventName = new RegExp(`^mg-${name}-[a-z][a-z0-9]*(-[a-z0-9]+)*$`);
+        for (const [, first] of source.matchAll(/new\s+(?:Custom)?Event\(\s*(.?)/g)) {
+          if (!/['"`]/.test(first))
+            fail(name, `${file} dispatches an event whose name is not a string literal, so it cannot be checked`);
+        }
+        for (const [, , type] of source.matchAll(/new\s+(?:Custom)?Event\(\s*(['"`])([^'"`]*)\1/g)) {
+          if (!eventName.test(type))
+            fail(name, `${file} dispatches "${type}", events must be named mg-${name}-<event>`);
+        }
+      }
     }
   }
 }

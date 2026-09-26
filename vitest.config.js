@@ -14,7 +14,11 @@ export default mergeConfig(
       projects: [
         {
           extends: true,
-          test: { name: 'components', include: ['components/**/*.test.js', 'tokens/**/*.test.js'], browser: browser() },
+          test: {
+            name: 'components',
+            include: ['components/**/*.test.js', 'tokens/**/*.test.js', '.storybook/**/*.test.js'],
+            browser: browser(),
+          },
           // Serve the repo root so tests can <link> the real CSS files.
           server: { fs: { allow: [import.meta.dirname] } },
         },

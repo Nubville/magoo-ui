@@ -16,11 +16,11 @@ const text = 'Cards group related content. Slots you leave out take no space.';
 export default {
   title: 'Components/Card',
   tags: ['autodocs'],
-  parameters: { layout: 'padded' },
   ...sdcMeta({
     id: 'card',
     yml,
     template,
+    layout: 'padded',
     args: {
       header: 'Card title',
       body: `<p style="margin:0">${text}</p>`,
