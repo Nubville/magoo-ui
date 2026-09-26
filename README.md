@@ -78,4 +78,4 @@ schemas/             Drupal's SDC metadata schemas (vendored, used by validate)
 docs/                old-plan.md (superseded), seams.md
 ```
 
-Components: `badge`, `card`, `dialog` (native `<dialog>` + Invoker Commands, with an optional JS fallback).
+Components: `badge`, `card`, `dialog` (native `<dialog>` + Invoker Commands, with an optional JS fallback), `popover` (native Popover API + CSS anchor positioning, no JS), `avatar` (picture or initials, optional JS for broken images), and the layout components `container` (centered column with a gutter), `stack` (vertical rhythm, owns the gap) and `grid` (responsive columns from a minimum item width, no breakpoints).

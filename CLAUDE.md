@@ -25,7 +25,11 @@ consumer and there is **no build step for consumers**. Vite, Storybook and Vites
   `base.css` has no fallbacks: it is the token consumer.
 - `semantic.css` colors are generated from one light/dark table (baseline block + `light-dark()` block), keep them in step.
   It deliberately does **not** set `color-scheme`, so tokens-only consumers keep their theme's scheme; `base.css` sets it.
-- Text/background pairs are contrast-tested (WCAG AA) in light and dark. Add any new pairing to `tokens/tokens.test.js`.
+- Text/background pairs are contrast-tested (WCAG AA) in every brand, light and dark. Add a new pairing to the table in
+  `tests/contrast.js`: it is then tested in CI and shown on the Storybook page **Foundations / Contrast** (a matrix for the
+  toolbar's brand, a heatmap of every brand and mode, and a checker for any two tokens). The page and the tests share that
+  module, so they can never disagree. Contrast is measured with `colorjs.io` (a dev dependency, pre-bundled in
+  `vite.config.js`) on the painted 8-bit sRGB color, so `color-mix()` and `oklch()` tokens work; APCA is shown as information only.
 
 ## Brands (themes/<name>.css, selected by `data-mg-theme`)
 
@@ -43,9 +47,19 @@ for every brand in light and dark (brands are found by glob, so a new file is te
   brand ramp, so retinting a brand leaves them alone.
 - `data-mg-mode="light|dark|auto"` on any element sets `color-scheme` there (explicit opt-in, semantic.css still never sets
   it on its own). Libraries: `magoo/theme-<name>` per brand (add one to `magoo.libraries.yml` per file).
+- Brands so far: forest (soft, serif), ink (square, dense, mono), sketch (drawn corners).
 - Drupal: `magoo_theme` (reference theme, lives in `drupal-test/web/themes/custom/`) sets both attributes on `<body>` from
   its settings and loads either only the chosen brand's CSS or (dev "Show switcher" on) all of them plus a picker.
   Storybook has Brand and Mode toolbars doing the same.
+
+## Space and shape scales (after Open Props, MIT)
+
+`--mg-space-1..15` are numbered **steps, not multipliers** (1rem is `3`, 2rem is `7`, 3rem is `8`), plus `--mg-space-fluid-1..10`.
+Shape primitives: `--mg-border-width-1..5` (1, 2, 5, 10, 25px), `--mg-radius-0..6`, `pill`, `blob-1..5`, `drawn-1..6` and
+`conditional-1..6`. **A radius is always used whole** (`border-radius: var(--mg-radius-container)`), never inside `calc()`: the
+blob and drawn shapes are two-part and percentage-based. That is why `mg-card` clips its media with the card's own `overflow`
+instead of computing a smaller inner radius. A brand carries a shape by remapping `--mg-radius-control` / `--mg-radius-container`
+(see `themes/sketch.css`).
 
 ## Layers do the specificity work
 
@@ -68,8 +82,19 @@ for every brand in light and dark (brands are found by glob, so a new file is te
   `#type: component`, which fails an enum prop and 500s. First variant listed is the default. `pnpm validate` enforces it.
 - Boolean attributes: `setAttribute('x', true)`, never `''` (drupal-attribute drops empty strings). Twig.js evaluates
   both branches of a ternary, so use `{% if %}{% set %}` for mutating calls.
+- Story canvas layout goes through `sdcMeta({ layout })`, never a sibling `parameters` key: the spread's own `parameters` overwrites it
+  (`pnpm validate` fails on it). Layout components use `fullscreen`/`padded`, or they shrink-wrap and a grid collapses to one column.
 - Story files keep `title` and `tags` as literals (Storybook's indexer reads them statically) and spread `sdcMeta()` from
   `.storybook/sdc.js`, which derives argTypes, variants and defaults from the `.component.yml`.
+- **Layout components (`container`, `stack`, `grid`) and single-purpose content slots (`badge`) render their slot with no wrapper**, so the
+  slotted children are the real flex/grid items. Multi-slot components keep the `<div slot="x">` wrappers. A layout component
+  has no visual styling and no semantics, and owns the space between its children (`mg-stack > * { margin-block: 0 }` beats
+  `mg.base` by layer order).
+- Popover-style overlays use the native Popover API (`popover` + `popovertarget`) and anchor with an implicit anchor, never a JS positioner.
+- **Events are named `mg-<component>-<event>`** (kebab-case: `mg-dialog-open`, `mg-dialog-before-close`), dispatched with
+  `{ bubbles: true, composed: true, detail }`. Never emit a bare name (`open`, `change`). Native events the platform already fires
+  (`close`, `cancel`, `toggle`) are not re-dispatched under an `mg-` name. None of the components emits a custom event yet.
+  `pnpm validate` fails on any `CustomEvent`/`Event` in a component's JS that breaks the pattern or has a non-literal name.
 - Native-first JS (see `components/dialog/dialog.js`): feature-detect, do nothing where the platform already does it, use one
   delegated document listener.
 
