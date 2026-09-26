@@ -110,6 +110,88 @@ export const SpaceShapeMotion = {
       </div>`),
 };
 
+const range = (from, to) => Array.from({ length: to - from + 1 }, (_, i) => from + i);
+
+export const SpaceScale = {
+  name: 'Tier 1 · Space scale',
+  render: () =>
+    wrap(`
+      <p>Numbered steps, not multipliers (after <a href="https://open-props.style/#sizes">Open Props</a>): the jumps widen as you climb, so
+      1rem is <code>3</code>, 2rem is <code>7</code> and 3rem is <code>8</code>. Only <code>semantic.css</code> may reference these.</p>
+      <h3>Steps</h3>
+      ${range(1, 15)
+        .map(
+          (
+            step,
+          ) => `<div style="display:flex;align-items:center;gap:var(--mg-space-gap-md);margin-block-end:var(--mg-space-stack-sm)">
+            <div style="flex:none;inline-size:9rem">${label(`--mg-space-${step}`)}</div>
+            <div style="inline-size:var(--mg-space-${step});max-inline-size:calc(100% - 10rem);block-size:1rem;background:var(--mg-color-accent);border-radius:var(--mg-radius-control)"></div>
+          </div>`,
+        )
+        .join('')}
+      <h3>Fluid (grows with the viewport between a floor and a ceiling)</h3>
+      ${range(1, 10)
+        .map(
+          (
+            step,
+          ) => `<div style="display:flex;align-items:center;gap:var(--mg-space-gap-md);margin-block-end:var(--mg-space-stack-sm)">
+            <div style="flex:none;inline-size:9rem">${label(`--mg-space-fluid-${step}`)}</div>
+            <div style="inline-size:var(--mg-space-fluid-${step});max-inline-size:calc(100% - 10rem);block-size:1rem;background:var(--mg-color-info-fg);border-radius:var(--mg-radius-control)"></div>
+          </div>`,
+        )
+        .join('')}`),
+};
+
+const swatch = (name, css, extra = '') =>
+  `<div style="flex:none;inline-size:8rem;text-align:center">
+    <div style="block-size:5rem;background:var(--mg-color-surface-muted);border:var(--mg-border-width) solid var(--mg-color-border-strong);${css}${extra}"></div>
+    ${label(name)}
+  </div>`;
+
+export const BordersAndShapes = {
+  name: 'Tier 1 · Borders and shapes',
+  render: () =>
+    wrap(`
+      <p>A radius is always used whole: <code>border-radius: var(--mg-radius-…)</code>, never inside <code>calc()</code>, because the
+      drawn and blob shapes are two-part and percentage-based.</p>
+      <h3>Border width</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:var(--mg-space-gap-lg)">
+        ${range(1, 5)
+          .map((n) =>
+            swatch(
+              `--mg-border-width-${n}`,
+              `border-width:var(--mg-border-width-${n});border-color:var(--mg-color-accent)`,
+            ),
+          )
+          .join('')}
+      </div>
+      <h3>Radius</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:var(--mg-space-gap-lg)">
+        ${[...range(0, 6).map((n) => `radius-${n}`), 'radius-pill'].map((name) => swatch(`--mg-${name}`, `border-radius:var(--mg-${name})`)).join('')}
+      </div>
+      <h3>Blob (organic)</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:var(--mg-space-gap-lg)">
+        ${range(1, 5)
+          .map((n) => swatch(`--mg-radius-blob-${n}`, `border-radius:var(--mg-radius-blob-${n})`))
+          .join('')}
+      </div>
+      <h3>Drawn (hand-drawn wobble)</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:var(--mg-space-gap-lg)">
+        ${range(1, 6)
+          .map((n) => swatch(`--mg-radius-drawn-${n}`, `border-radius:var(--mg-radius-drawn-${n})`))
+          .join('')}
+      </div>
+      <h3>Conditional (square at the viewport edge)</h3>
+      <p>The same radius, on an inset box and on one that spans the whole viewport.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:var(--mg-space-gap-lg)">
+        ${swatch('--mg-radius-conditional-3', 'border-radius:var(--mg-radius-conditional-3)')}
+      </div>
+      <div style="margin-inline:calc(var(--mg-space-inset-lg) * -1);margin-block-start:var(--mg-space-stack-md);text-align:center">
+        <div style="block-size:5rem;background:var(--mg-color-surface-muted);border:var(--mg-border-width) solid var(--mg-color-border-strong);border-radius:var(--mg-radius-conditional-3)"></div>
+        ${label('--mg-radius-conditional-3, edge to edge')}
+      </div>`),
+};
+
 export const Elements = {
   name: 'Base · Bare elements',
   render: () =>

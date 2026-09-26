@@ -32,6 +32,9 @@ importers:
       ajv-draft-04:
         specifier: ^1.0.0
         version: 1.0.0(ajv@8.20.0)
+      colorjs.io:
+        specifier: ^0.7.1
+        version: 0.7.1
       drupal-attribute:
         specifier: ^1.2.1
         version: 1.2.1
@@ -1139,6 +1142,9 @@ packages:
 
   colord@2.10.0:
     resolution: {integrity: sha512-AidJptpBJmjTclAp9BkLwJi0T93fo5epJnbaZslpg6QVzpHjAiveF55mE9AcUJiGMqRHgMDY8soMsQtuNYMHfw==}
+
+  colorjs.io@0.7.1:
+    resolution: {integrity: sha512-LY7OHnJZxHwT5UlzNa9bbhHHDbzB6yE5+3MIPwJEQKRvSCt/T4G7epsj+9j2BExUIIfXFIJGsIXUKdfrK9Q5tA==}
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
@@ -2930,6 +2936,8 @@ snapshots:
   color-name@1.1.4: {}
 
   colord@2.10.0: {}
+
+  colorjs.io@0.7.1: {}
 
   concat-map@0.0.1: {}
 

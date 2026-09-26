@@ -23,12 +23,16 @@
    */
   mg-card {
     --_pad: var(--mg-card-padding, var(--mg-space-inset-md, 1rem));
-    --_radius: var(--mg-card-radius, var(--mg-radius-container, 0.5rem));
+    --_radius: var(--mg-card-radius, var(--mg-radius-container, 1rem));
 
     display: grid;
     grid-template: 'media' auto 'header' auto 'body' 1fr 'footer' auto / minmax(0, 1fr);
     border: var(--mg-border-width, 1px) solid var(--mg-card-border-color, var(--mg-color-border, #cbd5e1));
     border-radius: var(--_radius);
+
+    /* Clips the media slot to the card's own corners, whatever shape the radius is (a calc() on it would break). */
+    overflow: hidden;
+    overflow: clip;
     background: var(--mg-card-bg, var(--mg-color-surface, #fff));
     color: var(--mg-color-text, #0f172a);
     font: var(--mg-text-body-weight, 400) var(--mg-text-body-size, 1rem) / var(--mg-text-body-leading, 1.5)
@@ -56,7 +60,6 @@
   mg-card > [slot='media'] {
     grid-area: media;
     overflow: hidden;
-    border-radius: calc(var(--_radius) - 1px) calc(var(--_radius) - 1px) 0 0;
   }
 
   mg-card > [slot='media'] :is(img, video) {

@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { loadCss, loadTokens, resetDocument } from '../tests/support.js';
+import { contrast, pairs, resolveColor } from '../tests/contrast.js';
 
 // Every brand in themes/, found by glob so a new file is tested with no change here.
 const brandUrls = import.meta.glob('../themes/*.css', { query: '?url', import: 'default', eager: true });
@@ -15,54 +16,8 @@ const applyBrand = async (brand) => {
   document.body.dataset.mgTheme = brand;
 };
 
-// Resolve a token to the actual color the browser paints, in a given color scheme.
-const resolve = (scheme, token) => {
-  const probe = Object.assign(document.createElement('div'), {});
-  probe.style.colorScheme = scheme;
-  probe.style.color = `var(${token})`;
-  document.body.append(probe);
-  const [r, g, b] = getComputedStyle(probe)
-    .color.match(/[\d.]+/g)
-    .map(Number);
-  probe.remove();
-  return [r, g, b];
-};
-
-const luminance = (rgb) => {
-  const [r, g, b] = rgb.map((channel) => {
-    const c = channel / 255;
-    return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-  });
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-};
-
-const contrast = (a, b) => {
-  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
-  return (hi + 0.05) / (lo + 0.05);
-};
-
-const text = 4.5; // WCAG 1.4.3 normal text
-const ui = 3; // WCAG 1.4.11 non-text contrast
-
-const surfaces = ['canvas', 'surface'];
-const statuses = ['neutral', 'info', 'success', 'warning', 'danger'];
-const pairs = [
-  ...['canvas', 'surface', 'surface-muted'].flatMap((bg) => [
-    ['text', bg, text],
-    ['text-muted', bg, text],
-  ]),
-  ...surfaces.flatMap((bg) => [
-    ['link', bg, text],
-    ['link-hover', bg, text],
-    ['border-strong', bg, ui],
-    ['focus-ring', bg, ui],
-    ['accent', bg, ui],
-  ]),
-  ['accent-fg', 'accent', text],
-  ['accent-fg', 'accent-hover', text],
-  ['text-inverse', 'text', text],
-  ...statuses.map((status) => [`${status}-fg`, `${status}-bg`, text]),
-];
+// The color the browser paints for a token in a color scheme (the brand comes from <body>, see applyBrand).
+const resolve = (scheme, token) => resolveColor(token, { scheme });
 
 beforeEach(loadTokens);
 afterEach(() => {
@@ -136,8 +91,8 @@ describe('three tiers', () => {
   const value = (token) => getComputedStyle(document.documentElement).getPropertyValue(token).trim();
 
   it('resolves semantic tokens to the primitive they point at', () => {
-    expect(value('--mg-space-inset-md')).toBe(value('--mg-space-4'));
-    expect(value('--mg-radius-container')).toBe(value('--mg-radius-lg'));
+    expect(value('--mg-space-inset-md')).toBe(value('--mg-space-3'));
+    expect(value('--mg-radius-container')).toBe(value('--mg-radius-3'));
     expect(value('--mg-text-h1-size')).toBe(value('--mg-font-size-4xl'));
   });
 
@@ -147,5 +102,95 @@ describe('three tiers', () => {
     document.head.append(style);
     expect(value('--mg-space-inset-md')).toBe('3px');
     style.remove();
+  });
+});
+
+// What the browser paints for a declaration using the token, at the element's real size.
+const painted = (declaration, size = 'inline-size:10rem;block-size:4rem') => {
+  const probe = document.createElement('div');
+  probe.style.cssText = `${size};border:0 solid;${declaration}`;
+  document.body.append(probe);
+  const style = getComputedStyle(probe);
+  const result = { width: style.width, borderWidth: style.borderTopWidth, radius: style.borderTopLeftRadius };
+  probe.remove();
+  return result;
+};
+
+describe('space scale (Open Props steps)', () => {
+  const px = (step) => Number.parseFloat(painted(`inline-size:var(--mg-space-${step})`).width);
+  const steps = Array.from({ length: 15 }, (_, i) => i + 1);
+
+  it('matches the Open Props values, in px at a 16px root', () => {
+    expect([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(px)).toEqual([4, 8, 16, 20, 24, 28, 32, 48, 64, 80]);
+    expect([11, 12, 13, 14, 15].map(px)).toEqual([120, 160, 240, 320, 480]);
+  });
+
+  it('only ever grows', () => {
+    const sizes = steps.map(px);
+    expect(sizes).toEqual([...sizes].sort((a, b) => a - b));
+    expect(new Set(sizes).size).toBe(sizes.length);
+  });
+
+  it('keeps every fluid step between its floor and its ceiling', () => {
+    const fluid = (step) => Number.parseFloat(painted(`inline-size:var(--mg-space-fluid-${step})`).width);
+    const bounds = [[8, 16], [16, 24], [24, 32], [32, 48], [64, 80], [80, 120], [120, 160], [160, 240], [240, 320], [320, 480]]; // prettier-ignore
+    bounds.forEach(([floor, ceiling], index) => {
+      const value = fluid(index + 1);
+      expect(value, `fluid-${index + 1} = ${value}px`).toBeGreaterThanOrEqual(floor);
+      expect(value).toBeLessThanOrEqual(ceiling);
+    });
+  });
+});
+
+describe('shape tokens', () => {
+  const radii = [
+    ...[0, 1, 2, 3, 4, 5, 6].map((n) => `radius-${n}`),
+    'radius-pill',
+    ...[1, 2, 3, 4, 5].map((n) => `radius-blob-${n}`),
+    ...[1, 2, 3, 4, 5, 6].map((n) => `radius-drawn-${n}`),
+    ...[1, 2, 3, 4, 5, 6].map((n) => `radius-conditional-${n}`),
+  ];
+
+  it.each(radii)('--mg-%s is a valid border-radius', (name) => {
+    const probe = document.createElement('div');
+    probe.style.cssText = 'inline-size:10rem;block-size:4rem';
+    probe.style.borderRadius = `var(--mg-${name})`;
+    document.body.append(probe);
+    // An invalid-at-computed-time value falls back to square, which would also be "0px": compare against a real shape.
+    const radius = getComputedStyle(probe).borderTopLeftRadius;
+    probe.remove();
+    if (name === 'radius-0') expect(radius).toBe('0px');
+    else expect(radius, `${name} painted as ${radius}`).not.toBe('0px');
+  });
+
+  it('has border widths 1, 2, 5, 10 and 25px', () => {
+    const width = (n) => painted(`border-width:var(--mg-border-width-${n})`).borderWidth;
+    expect([1, 2, 3, 4, 5].map(width)).toEqual(['1px', '2px', '5px', '10px', '25px']);
+  });
+
+  it('drops a conditional radius to square only when the element spans the viewport', () => {
+    // The computed value stays an unresolved clamp() (it depends on layout), so test the effect: is the corner hittable?
+    const cornerHit = (inlineSize) => {
+      const probe = document.createElement('div');
+      probe.style.cssText = `position:fixed;inset:0 auto auto 0;inline-size:${inlineSize};block-size:8rem;background:red;border-radius:var(--mg-radius-conditional-3)`;
+      document.body.append(probe);
+      const hit = document.elementFromPoint(1, 1) === probe;
+      probe.remove();
+      return hit;
+    };
+    expect(cornerHit('50vw'), 'inset element keeps its rounded corner').toBe(false);
+    expect(cornerHit('100vw'), 'edge-to-edge element is square').toBe(true);
+  });
+
+  it('lets a brand carry a whole shape, and components then use it whole', async () => {
+    const container = () => painted('border-radius:var(--mg-radius-container)').radius;
+    const before = container();
+    await applyBrand('sketch');
+    const drawn = container();
+    expect(drawn).not.toBe(before);
+    expect(drawn).not.toBe('0px');
+    document.body.dataset.mgTheme = 'ink';
+    await loadCss(brands.ink);
+    expect(container().split(' ')[0]).toBe('0px');
   });
 });

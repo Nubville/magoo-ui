@@ -29,3 +29,10 @@ theme-ink:
   css:
     theme:
       themes/ink.css: {}
+
+theme-sketch:
+  dependencies:
+    - magoo/tokens
+  css:
+    theme:
+      themes/sketch.css: {}

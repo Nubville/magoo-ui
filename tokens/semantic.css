@@ -79,22 +79,22 @@
     /* Spacing roles: inset is padding, stack is vertical rhythm between blocks, gap is flex/grid gaps. */
     --mg-space-inset-xs: var(--mg-space-1);
     --mg-space-inset-sm: var(--mg-space-2);
-    --mg-space-inset-md: var(--mg-space-4);
-    --mg-space-inset-lg: var(--mg-space-6);
+    --mg-space-inset-md: var(--mg-space-3);
+    --mg-space-inset-lg: var(--mg-space-5);
     --mg-space-stack-sm: var(--mg-space-2);
-    --mg-space-stack-md: var(--mg-space-4);
-    --mg-space-stack-lg: var(--mg-space-8);
+    --mg-space-stack-md: var(--mg-space-3);
+    --mg-space-stack-lg: var(--mg-space-7);
     --mg-space-gap-sm: var(--mg-space-2);
-    --mg-space-gap-md: var(--mg-space-4);
-    --mg-space-gap-lg: var(--mg-space-6);
-    --mg-size-control: var(--mg-space-10);
+    --mg-space-gap-md: var(--mg-space-3);
+    --mg-space-gap-lg: var(--mg-space-5);
+    --mg-size-control: var(--mg-space-8);
 
     /* Shape roles. */
-    --mg-radius-control: var(--mg-radius-md);
-    --mg-radius-container: var(--mg-radius-lg);
+    --mg-radius-control: var(--mg-radius-2);
+    --mg-radius-container: var(--mg-radius-3);
     --mg-radius-round: var(--mg-radius-pill);
     --mg-border-width: var(--mg-border-width-1);
-    --mg-border-width-emphasis: var(--mg-border-width-4);
+    --mg-border-width-emphasis: var(--mg-border-width-3);
     --mg-focus-ring-width: var(--mg-border-width-2);
     --mg-focus-ring-offset: var(--mg-border-width-2);
     --mg-shadow-raised: var(--mg-shadow-1);

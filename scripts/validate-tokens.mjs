@@ -12,6 +12,8 @@
  *  6. themes/<name>.css (a brand): a literal value must redeclare an existing primitive, and a var()/light-dark() value
  *     must remap an existing semantic token to primitives only. A brand never invents tokens, add a step to
  *     primitives.css first. Its selector must be [data-mg-theme='<name>'], matching the file name.
+ *  7. Every brand is linked in .storybook/preview-head.html. Storybook loads brand CSS from there, and the contrast page
+ *     would otherwise show the default colors under a brand's name, which reads as a false pass.
  */
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -68,6 +70,15 @@ for (const file of themeFiles) {
     if (leftover && !literalAllowed.has(token))
       fail(path, `${token} contains a literal (${leftover}), use a primitive`);
   }
+}
+
+const previewHead = read('.storybook/preview-head.html');
+for (const file of themeFiles) {
+  if (!previewHead.includes(`/magoo/themes/${file}`))
+    fail(
+      '.storybook/preview-head.html',
+      `does not link /magoo/themes/${file}, add it (Storybook and the contrast page need it)`,
+    );
 }
 
 const consumers = [{ file: 'tokens/base.css', own: null }];

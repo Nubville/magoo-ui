@@ -85,18 +85,37 @@
     --mg-color-red-900: #7f1d1d;
     --mg-color-red-950: #450a0a;
 
-    /* Space scale (rem, so it follows the user's font size). */
+    /*
+     * Space scale (rem, so it follows the user's font size). Steps and values follow Open Props (MIT, Adam Argyle):
+     * the numbers are steps, not multipliers, so the jumps widen as you climb (1rem is 3, 2rem is 7, 3rem is 8).
+     * Fluid steps grow with the viewport between a floor and a ceiling.
+     */
     --mg-space-0: 0;
     --mg-space-1: 0.25rem;
     --mg-space-2: 0.5rem;
-    --mg-space-3: 0.75rem;
-    --mg-space-4: 1rem;
-    --mg-space-5: 1.25rem;
-    --mg-space-6: 1.5rem;
-    --mg-space-8: 2rem;
-    --mg-space-10: 2.5rem;
-    --mg-space-12: 3rem;
-    --mg-space-16: 4rem;
+    --mg-space-3: 1rem;
+    --mg-space-4: 1.25rem;
+    --mg-space-5: 1.5rem;
+    --mg-space-6: 1.75rem;
+    --mg-space-7: 2rem;
+    --mg-space-8: 3rem;
+    --mg-space-9: 4rem;
+    --mg-space-10: 5rem;
+    --mg-space-11: 7.5rem;
+    --mg-space-12: 10rem;
+    --mg-space-13: 15rem;
+    --mg-space-14: 20rem;
+    --mg-space-15: 30rem;
+    --mg-space-fluid-1: max(0.5rem, min(1vw, 1rem));
+    --mg-space-fluid-2: max(1rem, min(2vw, 1.5rem));
+    --mg-space-fluid-3: max(1.5rem, min(3vw, 2rem));
+    --mg-space-fluid-4: max(2rem, min(4vw, 3rem));
+    --mg-space-fluid-5: max(4rem, min(5vw, 5rem));
+    --mg-space-fluid-6: max(5rem, min(7vw, 7.5rem));
+    --mg-space-fluid-7: max(7.5rem, min(10vw, 10rem));
+    --mg-space-fluid-8: max(10rem, min(20vw, 15rem));
+    --mg-space-fluid-9: max(15rem, min(30vw, 20rem));
+    --mg-space-fluid-10: max(20rem, min(40vw, 30rem));
 
     /* Type. */
     --mg-font-sans: system-ui, -apple-system, 'Segoe UI', roboto, 'Helvetica Neue', arial, sans-serif;
@@ -119,15 +138,46 @@
     --mg-line-height-normal: 1.5;
     --mg-line-height-relaxed: 1.7;
 
-    /* Shape. */
-    --mg-radius-sm: 0.25rem;
-    --mg-radius-md: 0.375rem;
-    --mg-radius-lg: 0.5rem;
-    --mg-radius-xl: 0.75rem;
-    --mg-radius-pill: 999px;
+    /*
+     * Shape: border widths and corner radii. Steps follow Open Props (MIT, Adam Argyle).
+     * A radius is a whole value: use it as `border-radius: var(--token)`, never inside calc(), because the drawn and
+     * blob shapes are two-part (horizontal / vertical) and the blob ones are percentages.
+     *  - 0..6: a plain circular corner, from square to very round.
+     *  - pill: fully round ends, whatever the height.
+     *  - blob-*: organic, uneven ellipses. drawn-*: a hand-drawn wobble. Each is a different silhouette, not a scale.
+     *  - conditional-*: the matching plain radius, dropped to square when the element spans the viewport edge to edge.
+     *    (100vw includes a classic scrollbar, so with one showing an edge-to-edge element keeps its radius.)
+     */
     --mg-border-width-1: 1px;
     --mg-border-width-2: 2px;
-    --mg-border-width-4: 4px;
+    --mg-border-width-3: 5px;
+    --mg-border-width-4: 10px;
+    --mg-border-width-5: 25px;
+    --mg-radius-0: 0;
+    --mg-radius-1: 2px;
+    --mg-radius-2: 5px;
+    --mg-radius-3: 1rem;
+    --mg-radius-4: 2rem;
+    --mg-radius-5: 4rem;
+    --mg-radius-6: 8rem;
+    --mg-radius-pill: 999px;
+    --mg-radius-blob-1: 30% 70% 70% 30% / 53% 30% 70% 47%;
+    --mg-radius-blob-2: 53% 47% 34% 66% / 63% 46% 54% 37%;
+    --mg-radius-blob-3: 37% 63% 56% 44% / 49% 56% 44% 51%;
+    --mg-radius-blob-4: 63% 37% 37% 63% / 43% 37% 63% 57%;
+    --mg-radius-blob-5: 49% 51% 48% 52% / 57% 44% 56% 43%;
+    --mg-radius-drawn-1: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    --mg-radius-drawn-2: 125px 10px 20px 185px / 25px 205px 205px 25px;
+    --mg-radius-drawn-3: 15px 255px 15px 225px / 225px 15px 255px 15px;
+    --mg-radius-drawn-4: 15px 25px 155px 25px / 225px 150px 25px 115px;
+    --mg-radius-drawn-5: 250px 25px 15px 20px / 15px 80px 105px 115px;
+    --mg-radius-drawn-6: 28px 100px 20px 15px / 150px 30px 205px 225px;
+    --mg-radius-conditional-1: clamp(0px, calc((100vw - 100%) * 1e5), 2px);
+    --mg-radius-conditional-2: clamp(0px, calc((100vw - 100%) * 1e5), 5px);
+    --mg-radius-conditional-3: clamp(0px, calc((100vw - 100%) * 1e5), 1rem);
+    --mg-radius-conditional-4: clamp(0px, calc((100vw - 100%) * 1e5), 2rem);
+    --mg-radius-conditional-5: clamp(0px, calc((100vw - 100%) * 1e5), 4rem);
+    --mg-radius-conditional-6: clamp(0px, calc((100vw - 100%) * 1e5), 8rem);
     --mg-shadow-1: 0 1px 2px rgb(0 0 0 / 20%);
     --mg-shadow-2: 0 2px 6px rgb(0 0 0 / 25%);
     --mg-shadow-3: 0 8px 24px rgb(0 0 0 / 30%);

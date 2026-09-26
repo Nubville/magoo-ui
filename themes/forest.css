@@ -40,7 +40,7 @@
 
     /* Tier 2: roles that point somewhere else. */
     --mg-font-heading: var(--mg-font-serif);
-    --mg-radius-control: var(--mg-radius-lg);
-    --mg-radius-container: var(--mg-radius-xl);
+    --mg-radius-control: var(--mg-radius-3);
+    --mg-radius-container: var(--mg-radius-4);
   }
 }

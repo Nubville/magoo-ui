@@ -1,0 +1,32 @@
+/**
+ * Brand: sketch. Selected by data-mg-theme="sketch" on <body> or on any subtree.
+ * Hand-drawn: a burnt-orange brand ramp, wobbly drawn corners, heavier borders. It exists to prove the shape tokens
+ * (drawn and blob radii) can carry a whole brand through the same two attributes as any other.
+ * See forest.css for how a brand file is put together.
+ */
+
+/* Repeated in every file so layer order never depends on which file Drupal loads first. */
+@layer mg.tokens, mg.base, mg.components, mg.enhanced;
+
+@layer mg.tokens {
+  [data-mg-theme='sketch'] {
+    /* Tier 1: this brand's values for existing primitives. */
+    --mg-color-brand-50: #fff7ed;
+    --mg-color-brand-100: #ffedd5;
+    --mg-color-brand-200: #fed7aa;
+    --mg-color-brand-300: #fdba74;
+    --mg-color-brand-400: #fb923c;
+    --mg-color-brand-500: #ea580c;
+    --mg-color-brand-600: #c2410c;
+    --mg-color-brand-700: #9a3412;
+    --mg-color-brand-800: #7c2d12;
+    --mg-color-brand-900: #6c2710;
+    --mg-color-brand-950: #431407;
+
+    /* Tier 2: roles that point somewhere else. */
+    --mg-radius-control: var(--mg-radius-drawn-1);
+    --mg-radius-container: var(--mg-radius-drawn-2);
+    --mg-radius-round: var(--mg-radius-blob-1);
+    --mg-border-width: var(--mg-border-width-2);
+  }
+}

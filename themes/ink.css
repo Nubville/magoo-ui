@@ -33,19 +33,17 @@
     --mg-color-gray-800: #262626;
     --mg-color-gray-900: #171717;
     --mg-color-gray-950: #0a0a0a;
-    --mg-radius-sm: 0;
-    --mg-radius-md: 0;
-    --mg-radius-lg: 0;
-    --mg-radius-xl: 0;
     --mg-shadow-1: 2px 2px 0 rgb(0 0 0 / 100%);
     --mg-shadow-3: 6px 6px 0 rgb(0 0 0 / 100%);
 
     /* Tier 2: roles that point somewhere else. */
     --mg-font-heading: var(--mg-font-mono);
+    --mg-radius-control: var(--mg-radius-0);
+    --mg-radius-container: var(--mg-radius-0);
     --mg-border-width: var(--mg-border-width-2);
-    --mg-space-inset-md: var(--mg-space-3);
-    --mg-space-inset-lg: var(--mg-space-4);
-    --mg-space-stack-md: var(--mg-space-3);
-    --mg-space-gap-md: var(--mg-space-3);
+    --mg-space-inset-md: var(--mg-space-2);
+    --mg-space-inset-lg: var(--mg-space-3);
+    --mg-space-stack-md: var(--mg-space-2);
+    --mg-space-gap-md: var(--mg-space-2);
   }
 }

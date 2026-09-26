@@ -86,6 +86,20 @@ describe('mg-card layout (baseline: card.css only, no tokens)', () => {
     expect(image.getBoundingClientRect().width).toBe(card.clientWidth);
   });
 
+  it('clips the media to the card corners, whatever the radius shape', async () => {
+    await loadCss(cardCss);
+    const card = render({ ...full, variant: 'flat' });
+    card.style.cssText =
+      'position:fixed;inset:0 auto auto 0;inline-size:20rem;--mg-card-radius:255px 15px 225px 15px / 15px 225px 15px 255px';
+    slot(card, 'media').innerHTML = '<div style="block-size:6rem;background:red"></div>';
+    // (3, 3) is inside the media's box but outside the card's rounded corner. It only misses the media if the media is
+    // cut by the card's own shape (a two-part radius cannot go through calc()).
+    const media = slot(card, 'media');
+    expect(media.contains(document.elementFromPoint(3, 3))).toBe(false);
+    card.style.setProperty('--mg-card-radius', '0');
+    expect(media.contains(document.elementFromPoint(3, 3))).toBe(true);
+  });
+
   it('tightens padding when compact', async () => {
     await loadCss(cardCss);
     expect(getComputedStyle(slot(render({ ...full, compact: true }), 'body')).paddingLeft).toBe('8px');
