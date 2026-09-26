@@ -1,0 +1,52 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Grid
+status: experimental
+description: Lays its children out in a responsive grid with no breakpoints. Every item has a minimum width and the grid fits as many columns as there are room for, so it collapses to one column on a narrow container by itself. Optionally cap the number of columns. Items in a row share a height, and an item marked span="full" takes a whole row. No visual styling and no semantics of its own. Renders an undefined <mg-grid> element.
+props:
+  type: object
+  properties:
+    columns:
+      type: string
+      title: Maximum columns
+      description: The most columns to use, however wide the grid is. auto uses as many as fit. It never forces a column narrower than the minimum item width.
+      enum:
+        - auto
+        - '2'
+        - '3'
+        - '4'
+        - '5'
+        - '6'
+      default: auto
+    min:
+      type: string
+      title: Minimum item width
+      description: The narrowest an item gets before the grid drops a column. sm is 10rem, md 16rem, lg 24rem.
+      enum:
+        - md
+        - sm
+        - lg
+      default: md
+    gap:
+      type: string
+      title: Gap
+      description: Space between items, from the gap spacing tokens.
+      enum:
+        - md
+        - sm
+        - lg
+        - none
+      default: md
+    align:
+      type: string
+      title: Vertical alignment
+      description: How items sit in their row. stretch makes every item in a row the same height.
+      enum:
+        - stretch
+        - start
+        - center
+        - end
+      default: stretch
+slots:
+  content:
+    title: Content
+    description: The items. They are the grid's direct children, with no wrapper. Give an item span="full" to make it take a whole row.

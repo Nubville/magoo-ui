@@ -1,0 +1,21 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Container
+status: experimental
+description: Centers its content in a column with a maximum width and a gutter on each side. It is a block, has no visual styling and no semantics of its own. Renders an undefined <mg-container> element.
+props:
+  type: object
+  properties:
+    size:
+      type: string
+      title: Size
+      description: The widest the column gets. The gutter is inside that width. full removes the limit and keeps only the gutter.
+      enum:
+        - md
+        - sm
+        - lg
+        - full
+      default: md
+slots:
+  content:
+    title: Content
+    description: Anything. It is laid out normally inside the column.

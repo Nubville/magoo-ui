@@ -1,0 +1,8 @@
+{#
+  Stack. The content slot has no wrapper: the children themselves are the flex items, so the stack's gap and
+  alignment apply to exactly what the author placed. Attribute values are the public API.
+#}
+{% set attributes = attributes ?: create_attribute() %}
+<mg-stack{{ attributes.setAttribute('gap', gap|default('md')).setAttribute('align', align|default('stretch')) }}>
+  {%- block content %}{{ content }}{% endblock -%}
+</mg-stack>

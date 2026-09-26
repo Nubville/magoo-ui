@@ -1,0 +1,40 @@
+/**
+ * @element mg-container
+ * @attr {md|sm|lg|full} size - Widest the column gets. Default: md.
+ * @slot - The content.
+ * @cssprop --mg-container-max - Widest the column gets, gutter included (overrides the size attribute).
+ * @cssprop --mg-container-gutter - Space on each inline side.
+ */
+
+/* Repeated in every component so layer order never depends on which file Drupal loads first. */
+@layer mg.tokens, mg.base, mg.components, mg.enhanced;
+
+/*
+ * Tier 3 (component): --mg-container-* is the public API, defaulting to semantic tokens (see badge.css).
+ * Border-box, so the maximum width includes the gutter and the gutter never pushes the page wider than the viewport.
+ */
+@layer mg.components {
+  mg-container {
+    --_max: var(--mg-container-max, 64rem);
+    --_gutter: var(--mg-container-gutter, var(--mg-space-inset-md, 1rem));
+
+    display: block;
+    box-sizing: border-box;
+    inline-size: 100%;
+    max-inline-size: var(--_max);
+    margin-inline: auto;
+    padding-inline: var(--_gutter);
+  }
+
+  mg-container[size='sm'] {
+    --_max: var(--mg-container-max, 40rem);
+  }
+
+  mg-container[size='lg'] {
+    --_max: var(--mg-container-max, 80rem);
+  }
+
+  mg-container[size='full'] {
+    --_max: var(--mg-container-max, none);
+  }
+}

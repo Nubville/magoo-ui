@@ -1,0 +1,113 @@
+/**
+ * @element mg-grid
+ * @attr {auto|2|3|4|5|6} columns - Most columns to use. Default: auto (as many as fit).
+ * @attr {md|sm|lg} min - Minimum item width before a column is dropped. Default: md.
+ * @attr {md|sm|lg|none} gap - Space between items. Default: md.
+ * @attr {stretch|start|center|end} align - Vertical alignment in a row. Default: stretch.
+ * @slot - The items. Give one span="full" to take a whole row.
+ * @cssprop --mg-grid-min - Minimum item width (overrides the min attribute).
+ * @cssprop --mg-grid-gap - Space between items (overrides the gap attribute). Needs a unit, `0px` not `0`.
+ * @cssprop --mg-grid-columns - Most columns to use, a plain number (overrides the columns attribute).
+ */
+
+/* Repeated in every component so layer order never depends on which file Drupal loads first. */
+@layer mg.tokens, mg.base, mg.components, mg.enhanced;
+
+/*
+ * Tier 3 (component): --mg-grid-* is the public API, defaulting to semantic tokens (see badge.css).
+ * Baseline: auto-fit columns of at least the minimum width. The column cap is in mg.enhanced.
+ */
+@layer mg.components {
+  mg-grid {
+    --_gap: var(--mg-grid-gap, var(--mg-space-gap-md, 1rem));
+    --_min: var(--mg-grid-min, 16rem);
+    --_columns: var(--mg-grid-columns, 99); /* "auto": more than could ever fit, so the minimum width decides. */
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--_min), 1fr));
+    gap: var(--_gap);
+  }
+
+  mg-grid[min='sm'] {
+    --_min: var(--mg-grid-min, 10rem);
+  }
+
+  mg-grid[min='lg'] {
+    --_min: var(--mg-grid-min, 24rem);
+  }
+
+  mg-grid[gap='none'] {
+    --_gap: var(--mg-grid-gap, 0px);
+  }
+
+  mg-grid[gap='sm'] {
+    --_gap: var(--mg-grid-gap, var(--mg-space-gap-sm, 0.5rem));
+  }
+
+  mg-grid[gap='lg'] {
+    --_gap: var(--mg-grid-gap, var(--mg-space-gap-lg, 1.5rem));
+  }
+
+  mg-grid[columns='2'] {
+    --_columns: var(--mg-grid-columns, 2);
+  }
+
+  mg-grid[columns='3'] {
+    --_columns: var(--mg-grid-columns, 3);
+  }
+
+  mg-grid[columns='4'] {
+    --_columns: var(--mg-grid-columns, 4);
+  }
+
+  mg-grid[columns='5'] {
+    --_columns: var(--mg-grid-columns, 5);
+  }
+
+  mg-grid[columns='6'] {
+    --_columns: var(--mg-grid-columns, 6);
+  }
+
+  mg-grid[align='start'] {
+    align-items: start;
+  }
+
+  mg-grid[align='center'] {
+    align-items: center;
+  }
+
+  mg-grid[align='end'] {
+    align-items: end;
+  }
+
+  /*
+   * Like the stack, the grid owns the spacing, so an item's own block margin (mg.base gives paragraphs one) is reset.
+   * That beats mg.base by layer order, not by specificity. Unlayered theme rules still win.
+   * (No min-inline-size: 0 is needed for wide items: the tracks have a fixed minimum, so grid items have no automatic
+   * minimum size. Changing the tracks to a bare `1fr` would bring that problem back.)
+   */
+  mg-grid > * {
+    margin-block: 0;
+  }
+
+  mg-grid > [span='full'] {
+    grid-column: 1 / -1;
+  }
+}
+
+@layer mg.enhanced {
+  /*
+   * At most --_columns columns, each at least the minimum width. The first term of max() is one column's share of the
+   * width for exactly that many columns, so more columns than the cap can never fit. min(100%, ...) stops a
+   * minimum wider than the grid from overflowing it. The gap must carry a unit: calc() cannot subtract a bare 0 from
+   * a percentage, and the whole declaration would be dropped (leaving one column).
+   */
+  @supports (width: min(1px, 2px)) {
+    mg-grid {
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(min(100%, max(var(--_min), calc((100% - (var(--_columns) - 1) * var(--_gap)) / var(--_columns)))), 1fr)
+      );
+    }
+  }
+}

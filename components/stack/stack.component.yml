@@ -1,0 +1,31 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Stack
+status: experimental
+description: Lays its children out in one vertical column with an even gap between them. It owns the spacing, so children need no margins of their own (their block margins are reset inside a stack). No visual styling and no semantics of its own. Renders an undefined <mg-stack> element.
+props:
+  type: object
+  properties:
+    gap:
+      type: string
+      title: Gap
+      description: Space between children, from the stack spacing tokens.
+      enum:
+        - md
+        - sm
+        - lg
+        - none
+      default: md
+    align:
+      type: string
+      title: Alignment
+      description: Where children sit across the column. stretch fills the width, the others shrink each child to its content.
+      enum:
+        - stretch
+        - start
+        - center
+        - end
+      default: stretch
+slots:
+  content:
+    title: Content
+    description: The children to stack. They are the stack's direct children, with no wrapper.

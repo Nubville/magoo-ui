@@ -1,0 +1,56 @@
+/**
+ * @element mg-stack
+ * @attr {md|sm|lg|none} gap - Space between children. Default: md.
+ * @attr {stretch|start|center|end} align - Cross-axis alignment. Default: stretch.
+ * @slot - The children to stack.
+ * @cssprop --mg-stack-gap - Space between children (overrides the gap attribute).
+ */
+
+/* Repeated in every component so layer order never depends on which file Drupal loads first. */
+@layer mg.tokens, mg.base, mg.components, mg.enhanced;
+
+/*
+ * Tier 3 (component): --mg-stack-gap is the public API, defaulting to the semantic stack tokens (see badge.css).
+ * The gap is flex `gap`, so it never collapses and never depends on which element comes first or last.
+ */
+@layer mg.components {
+  mg-stack {
+    --_gap: var(--mg-stack-gap, var(--mg-space-stack-md, 1rem));
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--_gap);
+  }
+
+  mg-stack[gap='none'] {
+    --_gap: var(--mg-stack-gap, 0);
+  }
+
+  mg-stack[gap='sm'] {
+    --_gap: var(--mg-stack-gap, var(--mg-space-stack-sm, 0.5rem));
+  }
+
+  mg-stack[gap='lg'] {
+    --_gap: var(--mg-stack-gap, var(--mg-space-stack-lg, 2rem));
+  }
+
+  mg-stack[align='start'] {
+    align-items: flex-start;
+  }
+
+  mg-stack[align='center'] {
+    align-items: center;
+  }
+
+  mg-stack[align='end'] {
+    align-items: flex-end;
+  }
+
+  /*
+   * The stack owns the vertical rhythm, so a child's own block margin (base.css gives paragraphs and headings one)
+   * would double it. Beats mg.base by layer order, not by specificity. Unlayered theme rules still win.
+   */
+  mg-stack > * {
+    margin-block: 0;
+  }
+}

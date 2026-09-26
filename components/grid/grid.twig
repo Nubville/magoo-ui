@@ -1,0 +1,8 @@
+{#
+  Grid. The content slot has no wrapper: the children themselves are the grid items, so the grid's gap and
+  alignment apply to exactly what the author placed. Attribute values are the public API.
+#}
+{% set attributes = attributes ?: create_attribute() %}
+<mg-grid{{ attributes.setAttribute('columns', columns|default('auto')).setAttribute('min', min|default('md')).setAttribute('gap', gap|default('md')).setAttribute('align', align|default('stretch')) }}>
+  {%- block content %}{{ content }}{% endblock -%}
+</mg-grid>

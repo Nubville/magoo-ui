@@ -1,0 +1,7 @@
+{#
+  Container. The content slot has no wrapper: the content is the container's direct children.
+#}
+{% set attributes = attributes ?: create_attribute() %}
+<mg-container{{ attributes.setAttribute('size', size|default('md')) }}>
+  {%- block content %}{{ content }}{% endblock -%}
+</mg-container>
