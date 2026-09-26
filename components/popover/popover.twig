@@ -1,0 +1,15 @@
+{#
+  Popover. Everything interactive is native: the popover attribute on the panel, and a button using
+  popovertarget, so it opens, closes and light-dismisses with no JS. The panel is its own slot wrapper and is
+  left truly empty when unused. Without popover support the attribute is ignored and the panel just shows inline.
+  Attribute values are escaped explicitly (html_attr): Drupal autoescapes anyway, Twig.js (Storybook, tests) does not.
+#}
+{% set attributes = attributes ?: create_attribute() %}
+<mg-popover{{ attributes.setAttribute('placement', placement|default('bottom')) }}>
+  {%- block trigger %}
+    {%- if trigger %}{{ trigger }}{% else -%}
+      <button type="button" popovertarget="{{ id|e('html_attr') }}">{{ trigger_label|default('Open') }}</button>
+    {%- endif %}
+  {% endblock -%}
+  <div id="{{ id|e('html_attr') }}" popover="{{ dismiss|default('auto') }}" slot="body"{% if label %} role="group" aria-label="{{ label|e('html_attr') }}"{% endif %}>{%- block body %}{{ body }}{% endblock -%}</div>
+</mg-popover>

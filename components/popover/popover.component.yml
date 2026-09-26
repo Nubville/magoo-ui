@@ -1,0 +1,49 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Popover
+status: experimental
+description: A non-modal panel anchored to its trigger, built on the native Popover API (the popover attribute and popovertarget). Open, close, Escape, light dismiss, the top layer and focus return are all native, so it needs no JS. Positions next to the trigger with CSS anchor positioning where supported and flips at the viewport edge, and is centered like a dialog where it is not. Renders an undefined <mg-popover> element.
+props:
+  type: object
+  required:
+    - id
+  properties:
+    id:
+      type: string
+      title: Popover ID
+      examples:
+        - details-popover
+      description: Unique id of the popover element. The trigger points at it with popovertarget.
+    trigger_label:
+      type: string
+      title: Trigger label
+      description: Text of the default trigger button. Ignored when the trigger slot is used.
+      default: Open
+    label:
+      type: string
+      title: Accessible name
+      description: Optional. Gives the panel role="group" and this aria-label, for content that needs a name.
+    placement:
+      type: string
+      title: Placement
+      description: Which side of the trigger the panel opens on. It flips to the opposite side when there is no room. start and end follow the writing direction.
+      enum:
+        - bottom
+        - top
+        - start
+        - end
+      default: bottom
+    dismiss:
+      type: string
+      title: Dismissal
+      description: auto closes on Escape, on a click outside and when another auto popover opens. manual only closes from a trigger or a button with popovertargetaction="hide".
+      enum:
+        - auto
+        - manual
+      default: auto
+slots:
+  trigger:
+    title: Trigger
+    description: Replaces the default button. It must be a <button> with popovertarget set to the popover id, which is also what anchors the panel to it.
+  body:
+    title: Body
+    description: The panel content. This wrapper is the popover element itself.

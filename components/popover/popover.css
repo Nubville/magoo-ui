@@ -1,0 +1,115 @@
+/**
+ * @element mg-popover
+ * @attr {bottom|top|start|end} placement - Side of the trigger the panel opens on. Default: bottom.
+ * @slot trigger - Replaces the default button. Needs popovertarget set to the popover id.
+ * @slot body - Panel content.
+ * @cssprop --mg-popover-max-inline-size - Widest the panel gets (capped to the viewport).
+ * @cssprop --mg-popover-offset - Gap between the trigger and the panel.
+ * @cssprop --mg-popover-padding - Space inside the panel.
+ * @cssprop --mg-popover-bg - Background color.
+ * @cssprop --mg-popover-border-color - Border color.
+ * @cssprop --mg-popover-radius - Corner radius.
+ */
+
+/* Repeated in every component so layer order never depends on which file Drupal loads first. */
+@layer mg.tokens, mg.base, mg.components, mg.enhanced;
+
+/*
+ * Tier 3 (component): --mg-popover-* is the public API, defaulting to semantic tokens (see badge.css).
+ * Structure: <mg-popover> > trigger + <div popover slot="body">.
+ * Baseline: a popover-capable browser shows the panel centered in the top layer, like the UA default. A browser
+ * without the Popover API ignores the attribute and shows the panel inline under the trigger.
+ */
+@layer mg.components {
+  mg-popover {
+    --_offset: var(--mg-popover-offset, var(--mg-space-gap-sm, 0.5rem));
+
+    display: inline-block;
+  }
+
+  /* No display here: setting it would override the UA's `[popover]:not(:popover-open) { display: none }`. */
+  mg-popover > [popover] {
+    box-sizing: border-box;
+    max-inline-size: var(--mg-popover-max-inline-size, min(24rem, calc(100vw - 2rem)));
+    max-block-size: calc(100vh - 2rem);
+    max-block-size: calc(100dvh - 2rem);
+    padding: var(--mg-popover-padding, var(--mg-space-inset-md, 1rem));
+    overflow: auto;
+    overscroll-behavior: contain;
+    border: var(--mg-border-width, 1px) solid var(--mg-popover-border-color, var(--mg-color-border, #cbd5e1));
+    border-radius: var(--mg-popover-radius, var(--mg-radius-container, 1rem));
+    background: var(--mg-popover-bg, var(--mg-color-surface, #fff));
+    color: var(--mg-color-text, #0f172a);
+    box-shadow: var(--mg-shadow-overlay, 0 8px 24px rgb(0 0 0 / 30%));
+    font: var(--mg-text-body-weight, 400) var(--mg-text-body-size, 1rem) / var(--mg-text-body-leading, 1.5)
+      var(--mg-font-body, system-ui, sans-serif);
+  }
+}
+
+@layer mg.enhanced {
+  /*
+   * Anchor the panel to whatever button invoked it. A popover opened with popovertarget has an implicit anchor, so no
+   * anchor-name is needed and any number of popovers on a page cannot collide. position-try-fallbacks flips the
+   * panel to the opposite side when it would overflow the viewport.
+   */
+  @supports (position-area: block-end) {
+    mg-popover > [popover] {
+      inset: auto;
+      margin: 0;
+      position-area: block-end;
+      position-try-fallbacks: flip-block, flip-inline;
+      margin-block-start: var(--_offset);
+    }
+
+    mg-popover[placement='top'] > [popover] {
+      position-area: block-start;
+      margin-block: 0 var(--_offset);
+    }
+
+    mg-popover[placement='start'] > [popover] {
+      position-area: inline-start;
+      margin-block: 0;
+      margin-inline: 0 var(--_offset);
+    }
+
+    mg-popover[placement='end'] > [popover] {
+      position-area: inline-end;
+      margin-block: 0;
+      margin-inline: var(--_offset) 0;
+    }
+  }
+
+  /*
+   * Fade and scale in and out, including the top layer and display, where the browser can. It also requires :popover-open:
+   * the closed state is opacity 0, which must never apply to the inline fallback of a browser without the Popover API.
+   */
+  @supports (transition-behavior: allow-discrete) and selector(:popover-open) {
+    mg-popover > [popover] {
+      opacity: 0;
+      transform: scale(0.96);
+      transition:
+        opacity var(--mg-motion-duration, 200ms) var(--mg-motion-easing, ease),
+        transform var(--mg-motion-duration, 200ms) var(--mg-motion-easing, ease),
+        overlay var(--mg-motion-duration, 200ms) allow-discrete,
+        display var(--mg-motion-duration, 200ms) allow-discrete;
+    }
+
+    mg-popover > [popover]:popover-open {
+      opacity: 1;
+      transform: none;
+    }
+
+    @starting-style {
+      mg-popover > [popover]:popover-open {
+        opacity: 0;
+        transform: scale(0.96);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      mg-popover > [popover] {
+        transition: none;
+      }
+    }
+  }
+}
