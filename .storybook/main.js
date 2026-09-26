@@ -13,6 +13,8 @@ export default {
     { from: '../tokens', to: '/magoo/tokens' },
     { from: '../components', to: '/magoo/components' },
     { from: '../themes', to: '/magoo/themes' },
+    // The logo files, and favicon.svg at the root, which Storybook picks up as the tab icon.
+    { from: '../assets', to: '/' },
   ],
   viteFinal: (config) => {
     config.plugins = [...(config.plugins ?? []), twig({ namespaces: { magoo: join(root, 'components') } })];

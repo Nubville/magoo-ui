@@ -110,6 +110,11 @@ instead of computing a smaller inner radius. A brand carries a shape by remappin
 
 ## Gotchas
 
+- Logo: `assets/logo.svg` is the traced art (black outline on transparent, so it disappears on dark). `logo-on-dark.svg` and
+  `favicon.svg` add a white halo behind the silhouette and work on both. `assets/` is export-ignored (never shipped to Drupal).
+  Storybook uses it through `.storybook/manager.js` (sidebar brand) and a `staticDirs` entry mapping `assets/` to `/`, where
+  Storybook finds `favicon.svg` on its own. The README swaps to the halo file in dark mode with `<picture>`.
+
 - `vite-plugin-twig-drupal` only supports vite <= 7, so vite is pinned to `^7`. Its generated code imports `twig`,
   `drupal-attribute` and `drupal-twig-extensions`, which must be direct devDependencies under pnpm, and are pre-bundled in
   `vite.config.js` (`optimizeDeps.include`) so cold Vitest runs don't reload mid-test.

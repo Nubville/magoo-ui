@@ -1,6 +1,7 @@
 # Keep dev tooling out of `composer install --prefer-dist`. Drupal only needs the shipped files.
 /.storybook export-ignore
 /docs export-ignore
+/assets export-ignore
 /scripts export-ignore
 /schemas export-ignore
 /eslint.config.js export-ignore

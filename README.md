@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-on-dark.svg">
+    <img src="assets/logo.svg" alt="Mr. Magoo, the Magoo UI mascot" width="160">
+  </picture>
+</p>
+
 # Magoo UI
 
 A design system of [Drupal single directory components](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components).
