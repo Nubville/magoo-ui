@@ -1,0 +1,83 @@
+/**
+ * @element mg-avatar
+ * @attr {circle|rounded|square} variant - Shape. Default: circle.
+ * @attr {xs|sm|md|lg|xl} size - Default: md.
+ * @cssprop --mg-avatar-size - Width and height.
+ * @cssprop --mg-avatar-bg - Background color behind the initials.
+ * @cssprop --mg-avatar-fg - Initials color.
+ * @cssprop --mg-avatar-border-color - Border color.
+ * @cssprop --mg-avatar-radius - Corner radius (overrides the variant).
+ */
+
+/* Repeated in every component so layer order never depends on which file Drupal loads first. */
+@layer mg.tokens, mg.base, mg.components, mg.enhanced;
+
+/*
+ * Tier 3 (component): --mg-avatar-* is the public API, defaulting to semantic tokens (see badge.css).
+ * Structure: <mg-avatar> > <span>initials</span> + <img>, stacked in one grid cell. The image comes last, so it covers.
+ */
+@layer mg.components {
+  mg-avatar {
+    --_size: var(--mg-avatar-size, 2.5rem);
+    --_bg: var(--mg-avatar-bg, var(--mg-color-neutral-bg, #f1f5f9));
+    --_radius: var(--mg-avatar-radius, var(--mg-radius-round, 999px));
+
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    box-sizing: border-box;
+    inline-size: var(--_size);
+    block-size: var(--_size);
+    overflow: hidden;
+    border: var(--mg-border-width, 1px) solid var(--mg-avatar-border-color, var(--mg-color-neutral-border, #cbd5e1));
+    border-radius: var(--_radius);
+    background: var(--_bg);
+    color: var(--mg-avatar-fg, var(--mg-color-neutral-fg, #1e293b));
+    font: var(--mg-text-strong-weight, 600) calc(var(--_size) * 0.4) / 1 var(--mg-font-body, system-ui, sans-serif);
+    text-transform: uppercase;
+    vertical-align: middle;
+    user-select: none;
+  }
+
+  mg-avatar[variant='rounded'] {
+    --_radius: var(--mg-avatar-radius, var(--mg-radius-control, 5px));
+  }
+
+  mg-avatar[variant='square'] {
+    --_radius: var(--mg-avatar-radius, 0);
+  }
+
+  mg-avatar[size='xs'] {
+    --_size: var(--mg-avatar-size, 1.5rem);
+  }
+
+  mg-avatar[size='sm'] {
+    --_size: var(--mg-avatar-size, 2rem);
+  }
+
+  mg-avatar[size='lg'] {
+    --_size: var(--mg-avatar-size, 3.5rem);
+  }
+
+  mg-avatar[size='xl'] {
+    --_size: var(--mg-avatar-size, 5rem);
+  }
+
+  mg-avatar > * {
+    grid-area: 1 / 1;
+  }
+
+  /* Opaque, so the initials behind never show through a transparent image. */
+  mg-avatar > img {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    background: var(--_bg);
+    object-fit: cover;
+  }
+
+  /* Set by avatar.js when the image fails to load. Needs its own rule: `display` above would beat the UA's [hidden]. */
+  mg-avatar > img[hidden] {
+    display: none;
+  }
+}

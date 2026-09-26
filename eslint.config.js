@@ -17,6 +17,7 @@ export default [
         Element: 'readonly',
         HTMLButtonElement: 'readonly',
         HTMLDialogElement: 'readonly',
+        HTMLImageElement: 'readonly',
         MouseEvent: 'readonly',
       },
     },

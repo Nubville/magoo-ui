@@ -1,0 +1,14 @@
+{#
+  Avatar. The image is decorative (alt="") and the initials are hidden from assistive technology: the host carries
+  the accessible name (role="img" + aria-label) when `alt` is given, so a picture that fails to load never changes
+  what is announced. The initials sit behind the image and the image has an opaque background, so they only show
+  when the image is missing or hidden (avatar.js hides one that fails to load).
+  The name and src are printed with an explicit html_attr escape rather than through `attributes`: Drupal's Attribute
+  escapes its values but drupal-attribute (Twig.js) does not, and pre-escaping into Attribute would double-escape in Drupal.
+#}
+{% set attributes = attributes ?: create_attribute() %}
+{% set attributes = attributes.setAttribute('variant', variant|default('circle')).setAttribute('size', size|default('md')) %}
+<mg-avatar{{ attributes }}{% if alt %} role="img" aria-label="{{ alt|e('html_attr') }}"{% endif %}>
+  <span aria-hidden="true">{{ initials }}</span>
+  {%- if src %}<img src="{{ src|e('html_attr') }}" alt="" loading="lazy" decoding="async">{% endif -%}
+</mg-avatar>

@@ -1,0 +1,40 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Avatar
+status: experimental
+description: A person or organization as a picture, or as initials when there is no picture or it fails to load. The whole avatar is one image to assistive technology, named by the alt prop. Renders an undefined <mg-avatar> element. Optional avatar.js reveals the initials when the image fails to load.
+props:
+  type: object
+  properties:
+    src:
+      type: string
+      title: Image
+      format: uri-reference
+      description: URL of the picture. Leave empty to show the initials only.
+    alt:
+      type: string
+      title: Accessible name
+      description: The person's name, announced for the whole avatar. Leave empty when the name is already shown next to it, so it is not read twice.
+    initials:
+      type: string
+      title: Initials
+      description: One to three characters shown when there is no picture, or it fails to load (with avatar.js).
+    size:
+      type: string
+      title: Size
+      enum:
+        - xs
+        - sm
+        - md
+        - lg
+        - xl
+      default: md
+variants:
+  circle:
+    title: Circle
+    description: Default. Fully round.
+  rounded:
+    title: Rounded
+    description: The control corner radius.
+  square:
+    title: Square
+    description: Square corners.
